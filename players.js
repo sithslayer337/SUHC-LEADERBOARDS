@@ -1,7 +1,7 @@
 const PLAYERS = [
-  { id: 1, name: "Zephyr_X",   civ: 2100, hg: 1800, uhc: 1520 },
-  { id: 2, name: "NovaBlade",  civ: 1500, hg: 1200, uhc: 1100 },
-  { id: 3, name: "CrimsonAce", civ: 1000, hg: 900,  uhc: 850  },
+  { id: 1, name: "sithslayer337",   civ: 203, hg: 77, uhc: 0 },
+  { id: 2, name: "Verxza x",  civ: 150, hg: 12, uhc: 110 },
+  { id: 3, name: "FatherAJT", civ: 1000, hg: 900,  uhc: 850  },
 
   // Add players here:
   // { id: 4, name: "YourName", civ: 0, hg: 0, uhc: 0 },
