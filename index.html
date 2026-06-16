@@ -4,104 +4,422 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SUHC Leaderboards — All Time</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <script src="players.js"></script>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d0f;
+      --surface:   #141417;
+      --surface2:  #1c1c21;
+      --border:    #2a2a32;
+      --text:      #e8e8f0;
+      --muted:     #6b6b80;
+      --accent:    #e05c5c;
+
+      /* tab / rank colours */
+      --col-civ:   #60a5fa;
+      --col-hg:    #f87171;
+      --col-uhc:   #34d399;
+      --col-total: #e8e8f0;
+
+      --gold:   #f59e0b;
+      --silver: #94a3b8;
+      --bronze: #b45309;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ── Layout ── */
+    .page { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      gap: 16px;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo { width: 48px; height: 48px; object-fit: contain; }
+    .header-title h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.3px; }
+    .header-title p  { font-size: 0.8rem; color: var(--muted); }
+
+    .header-stats {
+      display: flex;
+      gap: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .stat-block .stat-val { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+    .stat-block .stat-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+    .tab-btn {
+      padding: 8px 18px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active[data-tab="overall"] { color: var(--col-total); border-bottom-color: var(--col-total); }
+    .tab-btn.active[data-tab="civ"]     { color: var(--col-civ);   border-bottom-color: var(--col-civ); }
+    .tab-btn.active[data-tab="hg"]      { color: var(--col-hg);    border-bottom-color: var(--col-hg); }
+    .tab-btn.active[data-tab="uhc"]     { color: var(--col-uhc);   border-bottom-color: var(--col-uhc); }
+
+    /* ── Table ── */
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .lb-table thead th {
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .lb-table thead th.right { text-align: right; }
+    .lb-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.12s;
+    }
+    .lb-table tbody tr:hover { background: var(--surface2); }
+    .lb-table tbody td { padding: 14px 12px; vertical-align: middle; }
+    .lb-table tbody td.right { text-align: right; }
+
+    /* rank column */
+    .rank-cell { width: 40px; color: var(--muted); font-weight: 700; font-size: 0.9rem; }
+    .rank-icon { width: 22px; height: 22px; }
+
+    /* avatar */
+    .avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    /* player cell */
+    .player-cell { display: flex; align-items: center; gap: 12px; }
+    .player-info .player-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .player-info .player-rank-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 1px 7px;
+      border-radius: 9999px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .player-info .player-rank-badge.rank-overall { color: var(--col-total); }
+    .player-info .player-rank-badge.rank-civ     { color: var(--col-civ); }
+    .player-info .player-rank-badge.rank-hg      { color: var(--col-hg); }
+    .player-info .player-rank-badge.rank-uhc     { color: var(--col-uhc); }
+
+    /* badges row */
+    .badges-row {
+      display: flex;
+      gap: 3px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .badge-icon-wrap {
+      position: relative;
+      display: inline-flex;
+      cursor: pointer;
+    }
+    .badge-icon-wrap img {
+      width: 18px;
+      height: 18px;
+      display: block;
+      transition: transform 0.1s;
+    }
+    .badge-icon-wrap:hover img { transform: scale(1.2); }
+
+    /* tooltip */
+    .badge-tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      background: #1e1e28;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.72rem;
+      padding: 4px 9px;
+      border-radius: 5px;
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    .badge-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--border);
+    }
+    .badge-icon-wrap:hover .badge-tooltip { display: block; }
+
+    /* score columns */
+    .score { font-size: 0.92rem; font-weight: 700; }
+    .score.civ     { color: var(--col-civ); }
+    .score.hg      { color: var(--col-hg); }
+    .score.uhc     { color: var(--col-uhc); }
+    .score.total   { color: var(--col-total); }
+    .score.zero    { color: var(--muted); }
+
+    /* empty state */
+    .empty-row td {
+      padding: 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ── Rank Tier System ── */
+    /* Colors assigned by JS inline via style attr for rank badges */
+  </style>
 </head>
 <body>
- 
-  <header>
-    <div class="header-inner">
-      <div class="logo">
-        <img src="icons/logo_2.png" alt="SUHC" class="header-logo-img" onerror="this.style.display='none'" />
-      </div>
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <img class="header-logo" src="icons/logo_2.png" alt="SUHC" onerror="this.style.display='none'"/>
       <div class="header-title">
         <h1>All Time Leaderboard</h1>
-        <p class="subtitle">Tracking the legends of Survival UHC</p>
+        <p>Tracking the legends of Survival UHC</p>
       </div>
-      <div class="header-right">
-        <img src="icons/logo.png" alt="SUHC Logo" class="site-logo" onerror="this.style.display='none'" />
-        <div class="header-stats">
-          <div class="hstat">
-            <span class="hstat-num" id="total-players">0</span>
-            <span class="hstat-label">Players</span>
-          </div>
-          <div class="hstat">
-            <span class="hstat-num" id="total-points-sum">0</span>
-            <span class="hstat-label">Points Earned</span>
-          </div>
-        </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-block">
+        <div class="stat-val" id="stat-players">0</div>
+        <div class="stat-lbl">Players</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-val" id="stat-points">0</div>
+        <div class="stat-lbl">Points Earned</div>
       </div>
     </div>
   </header>
- 
-  <main>
-    <div class="controls">
-      <div class="sort-tabs">
-        <button class="sort-btn active" data-sort="total">Total</button>
-        <button class="sort-btn" data-sort="civ">CIV</button>
-        <button class="sort-btn" data-sort="hg">HG</button>
-        <button class="sort-btn" data-sort="uhc">UHC</button>
-      </div>
-    </div>
- 
-    <div class="rank-legend" id="rank-legend"></div>
- 
-    <div class="board" id="board">
-      <div class="board-header">
-        <span class="col-rank">#</span>
-        <span class="col-name">Player</span>
-        <span class="col-stat">CIV</span>
-        <span class="col-stat">HG</span>
-        <span class="col-stat">UHC</span>
-        <span class="col-total">Total</span>
-      </div>
-      <div id="rows"></div>
-    </div>
- 
-    <div class="empty-state" id="empty-state" style="display:none">
-      <div class="empty-icon">⚔</div>
-      <p>No players yet.</p>
-    </div>
-  </main>
- 
-  <!-- Player Detail Modal -->
-  <div class="modal-overlay" id="detail-overlay">
-    <div class="modal" id="detail-modal">
-      <button class="modal-close" id="detail-close">✕</button>
-      <div class="modal-avatar" id="detail-avatar"></div>
-      <div class="modal-name" id="detail-name"></div>
-      <div class="modal-rank-row">
-        <img id="detail-tier-icon" class="tier-icon-md" src="" alt="" />
-        <div class="modal-rank" id="detail-rank"></div>
-      </div>
-      <div class="modal-position" id="detail-position"></div>
-      <div class="modal-total" id="detail-total"></div>
- 
-      <div class="stat-bars">
-        <div class="stat-row">
-          <span class="stat-label civ-color">CIV</span>
-          <div class="bar-track"><div class="bar-fill civ-fill" id="bar-civ"></div></div>
-          <span class="stat-val" id="val-civ"></span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label hg-color">HG</span>
-          <div class="bar-track"><div class="bar-fill hg-fill" id="bar-hg"></div></div>
-          <span class="stat-val" id="val-hg"></span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label uhc-color">UHC</span>
-          <div class="bar-track"><div class="bar-fill uhc-fill" id="bar-uhc"></div></div>
-          <span class="stat-val" id="val-uhc"></span>
-        </div>
-      </div>
- 
-      <div class="modal-badges" id="modal-badges"></div>
-    </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="overall">Overall</button>
+    <button class="tab-btn" data-tab="civ">CIV</button>
+    <button class="tab-btn" data-tab="hg">HG</button>
+    <button class="tab-btn" data-tab="uhc">UHC</button>
   </div>
- 
-  <script src="players.js"></script>
-  <script src="script.js"></script>
+
+  <!-- Leaderboard Table -->
+  <table class="lb-table">
+    <thead>
+      <tr>
+        <th class="rank-cell">#</th>
+        <th>Player</th>
+        <th class="right" id="col-civ">CIV</th>
+        <th class="right" id="col-hg">HG</th>
+        <th class="right" id="col-uhc">UHC</th>
+        <th class="right" id="col-total">Overall</th>
+      </tr>
+    </thead>
+    <tbody id="lb-body">
+      <tr class="empty-row"><td colspan="6">Loading…</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<script>
+// ── Rank Tier Definitions ──────────────────────────────────────────────────
+// Each tier: { name, min, max (inclusive, null = ∞), color, roman }
+const TIERS = [
+  { name: "Wood",      color: "#a16207", ranges: [{roman:"I",min:0,max:14},{roman:"II",min:15,max:20},{roman:"III",min:21,max:27}] },
+  { name: "Stone",     color: "#94a3b8", ranges: [{roman:"I",min:28,max:35},{roman:"II",min:36,max:43},{roman:"III",min:44,max:52}] },
+  { name: "Iron",      color: "#cbd5e1", ranges: [{roman:"I",min:53,max:61},{roman:"II",min:62,max:71},{roman:"III",min:72,max:82}] },
+  { name: "Diamond",   color: "#60a5fa", ranges: [{roman:"I",min:83,max:94},{roman:"II",min:95,max:107},{roman:"III",min:108,max:121}] },
+  { name: "Netherite", color: "#e05c5c", ranges: [{roman:"I",min:122,max:136},{roman:"II",min:137,max:153},{roman:"III",min:154,max:null}] },
+];
+
+function getRank(points) {
+  for (const tier of TIERS) {
+    for (const r of tier.ranges) {
+      if (points >= r.min && (r.max === null || points <= r.max)) {
+        return { label: `${tier.name} ${r.roman}`, color: tier.color };
+      }
+    }
+  }
+  // below lowest
+  return { label: "Wood I", color: TIERS[0].color };
+}
+
+// ── Tab State ─────────────────────────────────────────────────────────────
+let currentTab = "overall";
+
+// ── Render ────────────────────────────────────────────────────────────────
+function getTabScore(p) {
+  switch (currentTab) {
+    case "civ":  return p.civ;
+    case "hg":   return p.hg;
+    case "uhc":  return p.uhc;
+    default:     return (p.civ + p.hg + p.uhc) / 3;
+  }
+}
+
+function renderBadges(badgeIds) {
+  if (!badgeIds || badgeIds.length === 0) return "";
+  return badgeIds.map(id => {
+    const b = BADGES[id];
+    if (!b) return "";
+    return `
+      <span class="badge-icon-wrap">
+        <img src="${b.icon}" alt="${b.name}" title="">
+        <span class="badge-tooltip">${b.name} — ${b.desc}</span>
+      </span>`;
+  }).join("");
+}
+
+function renderRankBadge(points, tabClass) {
+  const r = getRank(Math.round(points));
+  return `<span class="player-rank-badge rank-${tabClass}" style="color:${r.color}">${r.label}</span>`;
+}
+
+function medalIcon(pos) {
+  const medals = [
+    `<svg class="rank-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#f59e0b" opacity="0.15"/><circle cx="12" cy="12" r="7" fill="#f59e0b"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1a1a">1</text></svg>`,
+    `<svg class="rank-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#94a3b8" opacity="0.15"/><circle cx="12" cy="12" r="7" fill="#94a3b8"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1a1a">2</text></svg>`,
+    `<svg class="rank-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#b45309" opacity="0.15"/><circle cx="12" cy="12" r="7" fill="#b45309"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1a1a">3</text></svg>`,
+  ];
+  return pos < 3 ? medals[pos] : `<span style="color:var(--muted);font-weight:700">${pos+1}</span>`;
+}
+
+function render() {
+  const body = document.getElementById("lb-body");
+
+  // Filter: hide players with 0 points in current tab
+  let players = PLAYERS.filter(p => getTabScore(p) > 0);
+
+  // Sort by score descending
+  players = players.slice().sort((a, b) => getTabScore(b) - getTabScore(a));
+
+  // Update header stats
+  document.getElementById("stat-players").textContent = players.length;
+  const totalPts = PLAYERS.reduce((s, p) => s + p.civ + p.hg + p.uhc, 0);
+  document.getElementById("stat-points").textContent = totalPts.toLocaleString();
+
+  // Update column header highlight
+  ["civ","hg","uhc","total"].forEach(c => {
+    const el = document.getElementById(`col-${c}`);
+    if (!el) return;
+    el.style.color = "";
+  });
+  const colMap = { overall: "total", civ: "civ", hg: "hg", uhc: "uhc" };
+  const colColors = { overall: "var(--col-total)", civ: "var(--col-civ)", hg: "var(--col-hg)", uhc: "var(--col-uhc)" };
+  const colEl = document.getElementById(`col-${colMap[currentTab]}`);
+  if (colEl) colEl.style.color = colColors[currentTab];
+
+  if (players.length === 0) {
+    body.innerHTML = `<tr class="empty-row"><td colspan="6">No players with points in this mode yet.</td></tr>`;
+    return;
+  }
+
+  const tabClass = currentTab === "overall" ? "overall" : currentTab;
+
+  body.innerHTML = players.map((p, i) => {
+    const civScore  = p.civ;
+    const hgScore   = p.hg;
+    const uhcScore  = p.uhc;
+    const overall   = (p.civ + p.hg + p.uhc) / 3;
+
+    // Rank badge shown in the player row changes based on active tab
+    let rankPoints;
+    switch (currentTab) {
+      case "civ":  rankPoints = civScore; break;
+      case "hg":   rankPoints = hgScore; break;
+      case "uhc":  rankPoints = uhcScore; break;
+      default:     rankPoints = overall; break;
+    }
+
+    const overallDisplay = overall % 1 === 0 ? overall : overall.toFixed(1);
+
+    return `
+    <tr>
+      <td class="rank-cell">${medalIcon(i)}</td>
+      <td>
+        <div class="player-cell">
+          <div class="avatar" style="background:${p.color}">${p.avatar}</div>
+          <div class="player-info">
+            <div class="player-name">
+              ${p.name}
+              ${renderRankBadge(rankPoints, tabClass)}
+            </div>
+            <div class="badges-row">${renderBadges(p.badges)}</div>
+          </div>
+        </div>
+      </td>
+      <td class="right"><span class="score civ ${civScore===0?'zero':''}">${civScore}</span></td>
+      <td class="right"><span class="score hg ${hgScore===0?'zero':''}">${hgScore}</span></td>
+      <td class="right"><span class="score uhc ${uhcScore===0?'zero':''}">${uhcScore}</span></td>
+      <td class="right"><span class="score total">${overallDisplay}</span></td>
+    </tr>`;
+  }).join("");
+}
+
+// ── Tab clicks ────────────────────────────────────────────────────────────
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentTab = btn.dataset.tab;
+    render();
+  });
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────
+render();
+</script>
 </body>
 </html>
