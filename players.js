@@ -37,49 +37,49 @@ const BADGES = {
   og: {
     id: "og",
     name: "OG",
-    icon: "icons/badge_og.svg",
+    icon: "icons/badge_og.png",
     desc: "Original Member — been here since the beginning"
   },
   hoster: {
     id: "hoster",
     name: "Hoster",
-    icon: "icons/badge_hoster.svg",
+    icon: "icons/badge_hoster.png",
     desc: "Hoster — has hosted games for the community"
   },
   executive: {
     id: "executive",
     name: "Executive",
-    icon: "icons/badge_executive.svg",
+    icon: "icons/badge_executive.png",
     desc: "Executive — server leadership & administration"
   },
   hg_champion: {
     id: "hg_champion",
     name: "HG Champion",
-    icon: "icons/badge_hg_champion.svg",
+    icon: "icons/badge_hg_champion.png",
     desc: "HG Champion — won a Hunger Games tournament"
   },
   uhc_champion: {
     id: "uhc_champion",
     name: "UHC Champion",
-    icon: "icons/badge_uhc_champion.svg",
+    icon: "icons/badge_uhc_champion.png",
     desc: "UHC Champion — won a UHC tournament"
   },
   inviter: {
     id: "inviter",
     name: "Inviter",
-    icon: "icons/badge_inviter.svg",
+    icon: "icons/badge_inviter.png",
     desc: "Inviter — brought new players into the community"
   },
   civ_champion: {
     id: "civ_champion",
     name: "CIV Champion",
-    icon: "icons/badge_civ_champion.svg",
+    icon: "icons/badge_civ_champion.png",
     desc: "CIV Champion — won a Civilization tournament"
   },
   contributor: {
     id: "contributor",
     name: "Contributor",
-    icon: "icons/badge_contributor.svg",
+    icon: "icons/badge_contributor.png",
     desc: "Contributor — helped build or improve the server/community"
   }
 };
