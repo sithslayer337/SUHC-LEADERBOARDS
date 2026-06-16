@@ -14,20 +14,23 @@
   <header>
     <div class="header-inner">
       <div class="logo">
-        <span class="logo-s">S</span>UHC
+        <span class="logo-s">S</span><span class="logo-rest">UHC</span>
       </div>
       <div class="header-title">
         <h1>All Time Leaderboard</h1>
         <p class="subtitle">Tracking the legends of Survival UHC</p>
       </div>
-      <div class="header-stats">
-        <div class="hstat">
-          <span class="hstat-num" id="total-players">0</span>
-          <span class="hstat-label">Players</span>
-        </div>
-        <div class="hstat">
-          <span class="hstat-num" id="total-points-sum">0</span>
-          <span class="hstat-label">Points Earned</span>
+      <div class="header-right">
+        <img src="icons/logo.png" alt="SUHC Logo" class="site-logo" onerror="this.style.display='none'" />
+        <div class="header-stats">
+          <div class="hstat">
+            <span class="hstat-num" id="total-players">0</span>
+            <span class="hstat-label">Players</span>
+          </div>
+          <div class="hstat">
+            <span class="hstat-num" id="total-points-sum">0</span>
+            <span class="hstat-label">Points Earned</span>
+          </div>
         </div>
       </div>
     </div>
@@ -41,17 +44,9 @@
         <button class="sort-btn" data-sort="hg">HG</button>
         <button class="sort-btn" data-sort="uhc">UHC</button>
       </div>
-      <button class="add-btn" id="open-add">+ Add Player</button>
     </div>
 
-    <div class="rank-legend">
-      <div class="rank-pill" style="--rc:#888780;--rb:#D3D1C7;--rf:#F1EFE8">⚔ Recruit <em>0–499</em></div>
-      <div class="rank-pill" style="--rc:#3B6D11;--rb:#97C459;--rf:#EAF3DE">🗡 Soldier <em>500–999</em></div>
-      <div class="rank-pill" style="--rc:#185FA5;--rb:#85B7EB;--rf:#E6F1FB">🛡 Veteran <em>1000–1999</em></div>
-      <div class="rank-pill" style="--rc:#854F0B;--rb:#EF9F27;--rf:#FAEEDA">👑 Elite <em>2000–3499</em></div>
-      <div class="rank-pill" style="--rc:#993C1D;--rb:#D85A30;--rf:#FAECE7">🏆 Champion <em>3500–4999</em></div>
-      <div class="rank-pill" style="--rc:#534AB7;--rb:#AFA9EC;--rf:#EEEDFE">★ Legend <em>5000+</em></div>
-    </div>
+    <div class="rank-legend" id="rank-legend"></div>
 
     <div class="board" id="board">
       <div class="board-header">
@@ -67,7 +62,7 @@
 
     <div class="empty-state" id="empty-state" style="display:none">
       <div class="empty-icon">⚔</div>
-      <p>No players yet. Add the first legend.</p>
+      <p>No players yet.</p>
     </div>
   </main>
 
@@ -77,7 +72,10 @@
       <button class="modal-close" id="detail-close">✕</button>
       <div class="modal-avatar" id="detail-avatar"></div>
       <div class="modal-name" id="detail-name"></div>
-      <div class="modal-rank" id="detail-rank"></div>
+      <div class="modal-rank-row">
+        <img id="detail-tier-icon" class="tier-icon-md" src="" alt="" />
+        <div class="modal-rank" id="detail-rank"></div>
+      </div>
       <div class="modal-position" id="detail-position"></div>
       <div class="modal-total" id="detail-total"></div>
 
@@ -103,38 +101,7 @@
     </div>
   </div>
 
-  <!-- Add Player Modal -->
-  <div class="modal-overlay" id="add-overlay">
-    <div class="modal add-modal">
-      <button class="modal-close" id="add-close">✕</button>
-      <h2 class="modal-heading">Add Player</h2>
-      <div class="form-group">
-        <label>Player Name</label>
-        <input type="text" id="inp-name" placeholder="e.g. SithSlayer337" maxlength="24" />
-      </div>
-      <div class="form-group">
-        <label class="civ-color">CIV Points</label>
-        <input type="number" id="inp-civ" placeholder="0" min="0" />
-      </div>
-      <div class="form-group">
-        <label class="hg-color">HG Points</label>
-        <input type="number" id="inp-hg" placeholder="0" min="0" />
-      </div>
-      <div class="form-group">
-        <label class="uhc-color">UHC Points</label>
-        <input type="number" id="inp-uhc" placeholder="0" min="0" />
-      </div>
-      <div class="form-preview" id="form-preview" style="display:none">
-        <span>Total</span><strong id="preview-total">0</strong>
-      </div>
-      <p class="form-error" id="form-error"></p>
-      <div class="form-actions">
-        <button class="btn-cancel" id="add-cancel">Cancel</button>
-        <button class="btn-submit" id="add-submit">Add to Board</button>
-      </div>
-    </div>
-  </div>
-
+  <script src="players.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
