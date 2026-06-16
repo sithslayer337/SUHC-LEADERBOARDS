@@ -95,7 +95,7 @@ function initials(name) {
 }
 
 function total(p) {
-  return (p.civ || 0) + (p.hg || 0) + (p.uhc || 0);
+  return ((p.civ || 0) + (p.hg || 0) + (p.uhc || 0)) / 3;
 }
 
 function fmt(n) {
