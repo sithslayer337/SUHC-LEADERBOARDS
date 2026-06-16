@@ -11,9 +11,9 @@
   --dim: #3d3c4a;
   --red: #cc2222;
   --red2: #ff3333;
-  --civ: #3d8ef0;
-  --hg: #4caf6e;
-  --uhc: #e05a40;
+  --civ: #5aaff0;
+  --hg: #f0a040;
+  --uhc: #e04040;
   --font: 'Space Grotesk', sans-serif;
   --mono: 'Space Mono', monospace;
   --radius: 10px;
@@ -50,12 +50,15 @@ header {
 }
 
 .logo {
-  font-family: var(--mono);
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -1px;
   flex-shrink: 0;
   line-height: 1;
+}
+
+.header-logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .logo-s    { color: var(--red2); }
