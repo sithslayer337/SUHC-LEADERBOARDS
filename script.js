@@ -1,19 +1,93 @@
-const RANKS = [
-  { min: 0,    max: 499,    title: "Recruit",  icon: "⚔",  color: "#888780", border: "#B4B2A9", bg: "#1c1c1a" },
-  { min: 500,  max: 999,    title: "Soldier",  icon: "🗡",  color: "#4caf6e", border: "#97C459", bg: "#111a13" },
-  { min: 1000, max: 1999,   title: "Veteran",  icon: "🛡",  color: "#3d8ef0", border: "#85B7EB", bg: "#0f1620" },
-  { min: 2000, max: 3499,   title: "Elite",    icon: "👑",  color: "#EF9F27", border: "#EF9F27", bg: "#1c1508" },
-  { min: 3500, max: 4999,   title: "Champion", icon: "🏆",  color: "#e05a40", border: "#D85A30", bg: "#1c0f0a" },
-  { min: 5000, max: Infinity,title: "Legend",  icon: "★",   color: "#9f99e8", border: "#AFA9EC", bg: "#130f2a" },
+// ── TIER SYSTEM ──────────────────────────────────────────────
+const TIERS = [
+  {
+    key: "WOOD",
+    name: "Wood",
+    icon: "icons/wood.png",
+    color: "#9e9e9e",
+    border: "#757575",
+    bg: "#1a1a1a",
+    subtiers: [
+      { label: "I",   min: 0,   max: 14  },
+      { label: "II",  min: 15,  max: 20  },
+      { label: "III", min: 21,  max: 27  },
+    ]
+  },
+  {
+    key: "STONE",
+    name: "Stone",
+    icon: "icons/stone.png",
+    color: "#f0c040",
+    border: "#c9a800",
+    bg: "#1a1700",
+    subtiers: [
+      { label: "I",   min: 28,  max: 35  },
+      { label: "II",  min: 36,  max: 43  },
+      { label: "III", min: 44,  max: 52  },
+    ]
+  },
+  {
+    key: "IRON",
+    name: "Iron",
+    icon: "icons/iron.png",
+    color: "#e08020",
+    border: "#b35f00",
+    bg: "#1a0e00",
+    subtiers: [
+      { label: "I",   min: 53,  max: 61  },
+      { label: "II",  min: 62,  max: 71  },
+      { label: "III", min: 72,  max: 82  },
+    ]
+  },
+  {
+    key: "DIAMOND",
+    name: "Diamond",
+    icon: "icons/diamond.png",
+    color: "#b06edd",
+    border: "#8840bb",
+    bg: "#150a20",
+    subtiers: [
+      { label: "I",   min: 83,  max: 94  },
+      { label: "II",  min: 95,  max: 107 },
+      { label: "III", min: 108, max: 121 },
+    ]
+  },
+  {
+    key: "NETHERITE",
+    name: "Netherite",
+    icon: "icons/netherite.png",
+    color: "#e03030",
+    border: "#aa1010",
+    bg: "#1a0000",
+    subtiers: [
+      { label: "I",   min: 122, max: 136    },
+      { label: "II",  min: 137, max: 153    },
+      { label: "III", min: 154, max: 999999 },
+    ]
+  },
 ];
 
+const SUBTIER_COLOR = "#aaaaaa";
 const MEDALS = ["🥇", "🥈", "🥉"];
 
 let players = [];
 let sortKey = "total";
 
+// ── RANK LOGIC ───────────────────────────────────────────────
 function getRank(pts) {
-  return RANKS.find(r => pts >= r.min && pts <= r.max) || RANKS[0];
+  for (const tier of TIERS) {
+    for (const sub of tier.subtiers) {
+      if (pts >= sub.min && pts <= sub.max) {
+        return { tier, sub };
+      }
+    }
+  }
+  return { tier: TIERS[0], sub: TIERS[0].subtiers[0] };
+}
+
+function rankLabel(pts) {
+  const { tier, sub } = getRank(pts);
+  return `${tier.name} ${sub.label}`;
 }
 
 function initials(name) {
@@ -30,24 +104,14 @@ function fmt(n) {
 
 function sorted() {
   return [...players].sort((a, b) => {
-    if (sortKey === "civ")   return (b.civ || 0) - (a.civ || 0);
-    if (sortKey === "hg")    return (b.hg  || 0) - (a.hg  || 0);
-    if (sortKey === "uhc")   return (b.uhc || 0) - (a.uhc || 0);
+    if (sortKey === "civ") return (b.civ || 0) - (a.civ || 0);
+    if (sortKey === "hg")  return (b.hg  || 0) - (a.hg  || 0);
+    if (sortKey === "uhc") return (b.uhc || 0) - (a.uhc || 0);
     return total(b) - total(a);
   });
 }
 
-function save() {
-  localStorage.setItem("suhc-players", JSON.stringify(players));
-}
-
-function load() {
-  try {
-    const raw = localStorage.getItem("suhc-players");
-    if (raw) players = JSON.parse(raw);
-  } catch (_) {}
-}
-
+// ── RENDER ───────────────────────────────────────────────────
 function render() {
   const list = sorted();
   const rows = document.getElementById("rows");
@@ -65,10 +129,11 @@ function render() {
 
   board.style.display = "block";
   empty.style.display = "none";
-
   rows.innerHTML = "";
+
   list.forEach((p, i) => {
-    const rank = getRank(total(p));
+    const t = total(p);
+    const { tier, sub } = getRank(t);
     const pos = i + 1;
     const row = document.createElement("div");
     row.className = "player-row";
@@ -78,19 +143,25 @@ function render() {
       ? `<span class="col-pos pos-medal">${MEDALS[pos - 1]}</span>`
       : `<span class="col-pos">#${pos}</span>`;
 
+    const iconImg = `<img src="${tier.icon}" class="tier-icon-sm" alt="${tier.name}" onerror="this.style.display='none'">`;
+
     row.innerHTML = `
       ${posCell}
       <div class="col-info">
-        <div class="avatar" style="--av-color:${rank.color};--av-border:${rank.border};--av-bg:${rank.bg}">${initials(p.name)}</div>
+        <div class="avatar" style="--av-color:${tier.color};--av-border:${tier.border};--av-bg:${tier.bg}">${initials(p.name)}</div>
         <div>
           <div class="player-name">${escHtml(p.name)}</div>
-          <div class="player-rank-title" style="--rank-color:${rank.color}">${rank.icon} ${rank.title}</div>
+          <div class="player-rank-title">
+            ${iconImg}
+            <span style="color:${tier.color}">${tier.name}</span>
+            <span style="color:${SUBTIER_COLOR}">&nbsp;${sub.label}</span>
+          </div>
         </div>
       </div>
       <span class="col-civ col-stat">${fmt(p.civ || 0)}</span>
       <span class="col-hg  col-stat">${fmt(p.hg  || 0)}</span>
       <span class="col-uhc col-stat">${fmt(p.uhc  || 0)}</span>
-      <span class="col-pts col-total">${fmt(total(p))}</span>
+      <span class="col-pts col-total">${fmt(t)}</span>
     `;
 
     row.addEventListener("click", () => openDetail(p.id));
@@ -102,24 +173,32 @@ function escHtml(str) {
   return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+// ── DETAIL MODAL ─────────────────────────────────────────────
 function openDetail(id) {
   const p = players.find(x => x.id === id);
   if (!p) return;
 
   const list = sorted();
   const pos = list.findIndex(x => x.id === id) + 1;
-  const rank = getRank(total(p));
   const t = total(p);
+  const { tier, sub } = getRank(t);
   const maxStat = Math.max(p.civ || 0, p.hg || 0, p.uhc || 0, 1);
 
   const av = document.getElementById("detail-avatar");
   av.textContent = initials(p.name);
-  av.style.background = rank.bg;
-  av.style.color = rank.color;
-  av.style.borderColor = rank.border;
+  av.style.background = tier.bg;
+  av.style.color = tier.color;
+  av.style.borderColor = tier.border;
 
   document.getElementById("detail-name").textContent = p.name;
-  document.getElementById("detail-rank").innerHTML = `<span style="color:${rank.color}">${rank.icon} ${rank.title}</span>`;
+
+  const iconEl = document.getElementById("detail-tier-icon");
+  iconEl.src = tier.icon;
+  iconEl.alt = tier.name;
+  iconEl.onerror = function() { this.style.display = "none"; };
+
+  document.getElementById("detail-rank").innerHTML =
+    `<span style="color:${tier.color}">${tier.name}</span> <span style="color:${SUBTIER_COLOR}">${sub.label}</span>`;
   document.getElementById("detail-position").textContent = `Rank #${pos} overall`;
   document.getElementById("detail-total").textContent = fmt(t);
 
@@ -138,11 +217,11 @@ function openDetail(id) {
   if (pos === 1) badges.push(`<span class="badge badge-top1">🥇 #1 All Time</span>`);
   if (pos === 2) badges.push(`<span class="badge badge-top2">🥈 #2 All Time</span>`);
   if (pos === 3) badges.push(`<span class="badge badge-top3">🥉 #3 All Time</span>`);
-  if (t >= 5000) badges.push(`<span class="badge badge-legend">★ Legend</span>`);
-  const top = Math.max(p.civ || 0, p.hg || 0, p.uhc || 0);
-  if (top === (p.civ || 0) && top > 0) badges.push(`<span class="badge badge-civ">CIV Specialist</span>`);
-  else if (top === (p.hg || 0) && top > 0) badges.push(`<span class="badge badge-hg">HG Specialist</span>`);
-  else if (top === (p.uhc || 0) && top > 0) badges.push(`<span class="badge badge-uhc">UHC Specialist</span>`);
+  if (tier.key === "NETHERITE") badges.push(`<span class="badge badge-neth">Netherite</span>`);
+  const topStat = Math.max(p.civ || 0, p.hg || 0, p.uhc || 0);
+  if (topStat === (p.civ || 0) && topStat > 0) badges.push(`<span class="badge badge-civ">CIV Specialist</span>`);
+  else if (topStat === (p.hg || 0) && topStat > 0) badges.push(`<span class="badge badge-hg">HG Specialist</span>`);
+  else if (topStat === (p.uhc || 0) && topStat > 0) badges.push(`<span class="badge badge-uhc">UHC Specialist</span>`);
 
   document.getElementById("modal-badges").innerHTML = badges.join("");
   document.getElementById("detail-overlay").classList.add("open");
@@ -155,66 +234,10 @@ function closeDetail() {
   document.getElementById("bar-uhc").style.width = "0";
 }
 
-function openAdd() {
-  document.getElementById("inp-name").value = "";
-  document.getElementById("inp-civ").value  = "";
-  document.getElementById("inp-hg").value   = "";
-  document.getElementById("inp-uhc").value  = "";
-  document.getElementById("form-error").textContent = "";
-  document.getElementById("form-preview").style.display = "none";
-  document.getElementById("add-overlay").classList.add("open");
-  setTimeout(() => document.getElementById("inp-name").focus(), 100);
-}
-
-function closeAdd() {
-  document.getElementById("add-overlay").classList.remove("open");
-}
-
-function submitAdd() {
-  const name = document.getElementById("inp-name").value.trim();
-  const civ  = parseInt(document.getElementById("inp-civ").value)  || 0;
-  const hg   = parseInt(document.getElementById("inp-hg").value)   || 0;
-  const uhc  = parseInt(document.getElementById("inp-uhc").value)  || 0;
-  const err  = document.getElementById("form-error");
-
-  if (!name) { err.textContent = "Player name is required."; return; }
-  if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) {
-    err.textContent = "A player with that name already exists."; return;
-  }
-  if ([civ, hg, uhc].some(v => v < 0)) { err.textContent = "Points can't be negative."; return; }
-
-  players.push({ id: Date.now(), name, civ, hg, uhc });
-  save();
-  render();
-  closeAdd();
-}
-
-function updatePreview() {
-  const civ = parseInt(document.getElementById("inp-civ").value) || 0;
-  const hg  = parseInt(document.getElementById("inp-hg").value)  || 0;
-  const uhc = parseInt(document.getElementById("inp-uhc").value) || 0;
-  const t = civ + hg + uhc;
-  const preview = document.getElementById("form-preview");
-  if (t > 0) {
-    preview.style.display = "flex";
-    document.getElementById("preview-total").textContent = fmt(t);
-  } else {
-    preview.style.display = "none";
-  }
-}
-
-/* ── BOOT ── */
+// ── BOOT ─────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-  load();
-
-  if (players.length === 0) {
-    players = [
-      { id: 1, name: "Zephyr_X",   civ: 2100, hg: 1800, uhc: 1520 },
-      { id: 2, name: "NovaBlade",  civ: 1500, hg: 1200, uhc: 1100 },
-      { id: 3, name: "CrimsonAce", civ: 1000, hg: 900,  uhc: 850  },
-    ];
-    save();
-  }
+  // Players come from players.js (PLAYERS array)
+  players = typeof PLAYERS !== "undefined" ? PLAYERS : [];
 
   render();
 
@@ -227,27 +250,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  document.getElementById("open-add").addEventListener("click", openAdd);
-  document.getElementById("add-close").addEventListener("click", closeAdd);
-  document.getElementById("add-cancel").addEventListener("click", closeAdd);
-  document.getElementById("add-submit").addEventListener("click", submitAdd);
   document.getElementById("detail-close").addEventListener("click", closeDetail);
-
-  document.getElementById("add-overlay").addEventListener("click", e => {
-    if (e.target === e.currentTarget) closeAdd();
-  });
   document.getElementById("detail-overlay").addEventListener("click", e => {
     if (e.target === e.currentTarget) closeDetail();
   });
+});
 
-  ["inp-civ","inp-hg","inp-uhc"].forEach(id => {
-    document.getElementById(id).addEventListener("input", updatePreview);
-  });
-
-  document.getElementById("inp-name").addEventListener("keydown", e => {
-    if (e.key === "Enter") document.getElementById("inp-civ").focus();
-  });
-  document.getElementById("add-submit").addEventListener("keydown", e => {
-    if (e.key === "Enter") submitAdd();
+// ── RANK LEGEND ───────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  const legend = document.getElementById("rank-legend");
+  if (!legend) return;
+  TIERS.forEach(tier => {
+    tier.subtiers.forEach(sub => {
+      const pill = document.createElement("div");
+      pill.className = "rank-pill";
+      pill.innerHTML = `
+        <img src="${tier.icon}" class="tier-icon-pill" alt="${tier.name}" onerror="this.style.display='none'">
+        <span style="color:${tier.color}">${tier.name}</span>
+        <span style="color:${SUBTIER_COLOR}">&nbsp;${sub.label}</span>
+        <em>${sub.min}${sub.max > 99999 ? "+" : "–" + sub.max}</em>
+      `;
+      legend.appendChild(pill);
+    });
   });
 });
