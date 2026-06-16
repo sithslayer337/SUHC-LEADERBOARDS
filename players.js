@@ -38,13 +38,13 @@ const BADGES = {
     id: "og",
     name: "OG",
     icon: "icons/badge_og.png",
-    desc: "Original Member — been here since the beginning"
+    desc: "Original Member"
   },
   hoster: {
     id: "hoster",
     name: "Hoster",
     icon: "icons/badge_hoster.png",
-    desc: "Hoster — has hosted games for the community"
+    desc: "Hoster/Exec."
   },
   executive: {
     id: "executive",
@@ -56,31 +56,31 @@ const BADGES = {
     id: "hg_champion",
     name: "HG Champion",
     icon: "icons/badge_hg_champion.png",
-    desc: "HG Champion — won a Hunger Games tournament"
+    desc: "HG Champion"
   },
   uhc_champion: {
     id: "uhc_champion",
     name: "UHC Champion",
     icon: "icons/badge_uhc_champion.png",
-    desc: "UHC Champion — won a UHC tournament"
+    desc: "UHC Champion"
   },
   inviter: {
     id: "inviter",
     name: "Inviter",
     icon: "icons/badge_inviter.png",
-    desc: "Inviter — brought new players into the community"
+    desc: "Inviter"
   },
   civ_champion: {
     id: "civ_champion",
     name: "CIV Champion",
     icon: "icons/badge_civ_champion.png",
-    desc: "CIV Champion — won a Civilization tournament"
+    desc: "CIV Champion"
   },
   contributor: {
     id: "contributor",
     name: "Contributor",
     icon: "icons/badge_contributor.png",
-    desc: "Contributor — helped build or improve the server/community"
+    desc: "Contributor"
   }
 };
 
@@ -92,7 +92,7 @@ const PLAYERS = [
     civ: 1000,
     hg: 900,
     uhc: 850,
-    badges: ["og", "executive", "hoster"]
+    badges: ["og", "hoster"]
   },
   {
     name: "sithslayer337",
