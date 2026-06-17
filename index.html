@@ -42,7 +42,6 @@ html,body{
   font-size:14px;
 }
 
-/* noise texture */
 body::after{
   content:'';
   position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -87,7 +86,6 @@ body::after{
 }
 .stat-lbl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
 
-/* red gradient rule */
 .rule{
   height:2px;margin:0 0 26px;
   background:linear-gradient(90deg,var(--red) 0%,rgba(204,41,41,.3) 50%,transparent 100%);
@@ -161,26 +159,57 @@ tbody td.r{text-align:right}
 tbody td.c{text-align:center}
 
 /* ─── POSITION ───────────────────────────────────── */
-.pos{width:50px}
-.medal{
-  width:28px;height:28px;border-radius:50%;
-  display:inline-flex;align-items:center;justify-content:center;
-  font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;
-  color:#111;
-}
-.m1{background:var(--gold);box-shadow:0 0 10px rgba(240,180,41,.4)}
-.m2{background:var(--silver)}
-.m3{background:var(--bronze)}
-.pnum{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:var(--muted)}
+.pos{width:60px}
 
-/* ─── AVATAR ─────────────────────────────────────── */
-.av{
-  width:40px;height:40px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;color:#fff;
-  flex-shrink:0;
-  box-shadow:0 0 0 2px rgba(255,255,255,.1);
+/* Gold/Silver/Bronze placement badges */
+.place-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:8px;
+  font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;
+  color:#111;flex-shrink:0;
 }
+.place-1{
+  background:linear-gradient(135deg,#f7d060,#e8a200);
+  box-shadow:0 0 14px rgba(240,180,41,.45);
+}
+.place-2{
+  background:linear-gradient(135deg,#c4d4db,#7a96a3);
+  box-shadow:0 0 8px rgba(143,163,177,.3);
+}
+.place-3{
+  background:linear-gradient(135deg,#d4916a,#9a5520);
+  box-shadow:0 0 8px rgba(191,120,64,.3);
+}
+.place-num{
+  font-family:'Rajdhani',sans-serif;
+  font-size:.95rem;font-weight:700;
+  color:var(--muted);
+  min-width:32px;text-align:center;display:inline-block;
+}
+
+/* ─── PLAYER HEAD (square minecraft head) ────────── */
+.head-wrap{
+  width:40px;height:40px;flex-shrink:0;
+  border-radius:4px;overflow:hidden;
+  border:2px solid var(--border2);
+  image-rendering:pixelated;
+  position:relative;
+}
+.head-wrap img{
+  width:100%;height:100%;
+  object-fit:cover;
+  image-rendering:pixelated;
+  display:block;
+}
+/* fallback initials shown when image fails */
+.head-wrap .head-fallback{
+  display:none;
+  width:100%;height:100%;
+  align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;color:#fff;
+}
+.head-wrap img.failed{display:none}
+.head-wrap img.failed + .head-fallback{display:flex}
 
 /* ─── PLAYER CELL ────────────────────────────────── */
 .pcell{display:flex;align-items:center;gap:12px}
@@ -191,7 +220,7 @@ tbody td.c{text-align:center}
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;
 }
 
-/* rank badge (inline with name) */
+/* rank badge — fixed to not show "/>" */
 .rbadge{
   display:inline-flex;align-items:center;gap:5px;
   font-family:'Inter',sans-serif;
@@ -199,8 +228,10 @@ tbody td.c{text-align:center}
   padding:2px 8px 2px 5px;border-radius:4px;
   background:var(--s3);border:1px solid var(--border2);
   white-space:nowrap;letter-spacing:.02em;
+  line-height:1.4;
 }
-.rbadge img,.rbadge svg{width:14px;height:14px;display:block;flex-shrink:0}
+.rbadge img{width:14px;height:14px;display:block;flex-shrink:0;image-rendering:pixelated}
+.rbadge-text{display:inline;}
 
 /* ─── PLAYER BADGES ──────────────────────────────── */
 .brow{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
@@ -253,13 +284,28 @@ tbody td.c{text-align:center}
   display:flex;align-items:center;gap:16px;
   padding:22px 24px 18px;border-bottom:1px solid var(--border);
 }
-.mav{
-  width:58px;height:58px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;color:#fff;
-  flex-shrink:0;
-  box-shadow:0 0 0 3px rgba(255,255,255,.1);
+
+/* large square head in modal */
+.mhead-img{
+  width:58px;height:58px;flex-shrink:0;
+  border-radius:6px;overflow:hidden;
+  border:2px solid var(--border2);
+  image-rendering:pixelated;
 }
+.mhead-img img{
+  width:100%;height:100%;object-fit:cover;
+  image-rendering:pixelated;display:block;
+}
+.mhead-img img.failed{display:none}
+/* fallback for modal avatar */
+.mhead-fallback{
+  display:none;
+  width:100%;height:100%;
+  align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;color:#fff;
+}
+.mhead-img img.failed + .mhead-fallback{display:flex}
+
 .minfo{flex:1}
 .mname{
   font-family:'Rajdhani',sans-serif;
@@ -296,7 +342,7 @@ tbody td.c{text-align:center}
 }
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .mcard-tier{display:flex;align-items:center;gap:9px;margin-bottom:5px}
-.mcard-tier img,.mcard-tier svg{width:24px;height:24px;flex-shrink:0}
+.mcard-tier img{width:24px;height:24px;flex-shrink:0;image-rendering:pixelated}
 .mcard-name{
   font-family:'Rajdhani',sans-serif;
   font-size:1.15rem;font-weight:700;letter-spacing:.04em;
@@ -384,7 +430,10 @@ tbody td.c{text-align:center}
   <div class="modal">
     <div class="modal-stripe"></div>
     <div class="mhead">
-      <div class="mav" id="mAv">??</div>
+      <div class="mhead-img" id="mAvWrap">
+        <img id="mAvImg" src="" alt="">
+        <div class="mhead-fallback" id="mAvFallback" style="background:#333"></div>
+      </div>
       <div class="minfo">
         <div class="mname" id="mName">—</div>
         <div class="mbadges" id="mBadges"></div>
@@ -423,11 +472,7 @@ tbody td.c{text-align:center}
 </div>
 
 <script>
-/* ─── TIERS ─────────────────────────────────────────
-   icon: path in your icons/ folder.
-   If the file doesn't exist the onerror handler
-   swaps it for a coloured SVG automatically.
-───────────────────────────────────────────────────── */
+/* ─── TIERS ──────────────────────────────────────── */
 const TIERS=[
   {name:"Wood",     color:"#a16207", icon:"icons/wood.png",
    ranges:[{r:"I",min:0,max:14},{r:"II",min:15,max:20},{r:"III",min:21,max:27}]},
@@ -441,38 +486,61 @@ const TIERS=[
    ranges:[{r:"I",min:122,max:136},{r:"II",min:137,max:153},{r:"III",min:154,max:null}]},
 ];
 
-// Fallback SVGs per tier name (used when icon file missing)
+/* Fallback SVG icons per tier */
 const FB={
-  Wood:     `<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#7c5204"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#f0d28a" font-family="sans-serif">W</text></svg>`,
-  Stone:    `<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#54616d"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#ccd" font-family="sans-serif">S</text></svg>`,
-  Iron:     `<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#8fa3b1"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#111" font-family="sans-serif">I</text></svg>`,
-  Diamond:  `<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#1a66cc"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#adf" font-family="sans-serif">D</text></svg>`,
-  Netherite:`<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#8b1c1c"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#ffaaaa" font-family="sans-serif">N</text></svg>`,
+  Wood:     `<svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#7c5204"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#f0d28a" font-family="sans-serif">W</text></svg>`,
+  Stone:    `<svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#54616d"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#ccd" font-family="sans-serif">S</text></svg>`,
+  Iron:     `<svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#8fa3b1"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#111" font-family="sans-serif">I</text></svg>`,
+  Diamond:  `<svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#1a66cc"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#adf" font-family="sans-serif">D</text></svg>`,
+  Netherite:`<svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#8b1c1c"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#ffaaaa" font-family="sans-serif">N</text></svg>`,
 };
 
 function getRank(pts){
   for(const t of TIERS)
     for(const r of t.ranges)
       if(pts>=r.min&&(r.max===null||pts<=r.max))
-        return{label:`${t.name} ${r.r}`,color:t.color,tier:t.name,icon:t.icon};
-  return{label:"Wood I",color:TIERS[0].color,tier:"Wood",icon:TIERS[0].icon};
+        return{label:`${t.name} ${r.r}`,name:t.name,sub:r.r,color:t.color,tier:t.name,icon:t.icon};
+  return{label:"Wood I",name:"Wood",sub:"I",color:TIERS[0].color,tier:"Wood",icon:TIERS[0].icon};
 }
 
-// Build an img that falls back to inline SVG
-function rankImg(rank,size){
-  const s=size||14;
-  const fb=FB[rank.tier]||FB.Wood;
-  // escape quotes for onerror attribute
-  const esc=fb.replace(/"/g,"&quot;");
+/* Build rank icon img (with inline SVG fallback — no broken />  text) */
+function rankImg(rank, size){
+  const s = size || 14;
+  const svgFb = FB[rank.tier] || FB.Wood;
+  const svgEncoded = encodeURIComponent(svgFb);
   return `<img src="${rank.icon}" width="${s}" height="${s}"
-    style="display:block;flex-shrink:0;border-radius:2px"
-    onerror="this.outerHTML='<span style=\\"display:inline-flex;width:${s}px;height:${s}px\\">${esc}</span>'"/>`;
+    style="display:block;flex-shrink:0;border-radius:2px;image-rendering:pixelated"
+    onerror="this.src='data:image/svg+xml,${svgEncoded}';this.onerror=null">`;
+}
+
+/* Build the rank badge span — uses separate elements so no HTML entity issues */
+function rankBadge(rank){
+  return `<span class="rbadge" style="color:${rank.color}">${rankImg(rank,14)}<span class="rbadge-text">${rank.name} ${rank.sub}</span></span>`;
+}
+
+/* ─── HEAD IMAGE ─────────────────────────────────── */
+/* Returns the src path for a player's head.
+   Falls back to icons/heads/default.png if player.head is not set. */
+function headSrc(p){
+  return "icons/heads/" + (p.head || "default.png");
+}
+
+/* Build inline head HTML for table rows */
+function headHTML(p, size){
+  const src = headSrc(p);
+  const initials = p.name.replace(/[^a-zA-Z0-9]/g,"").slice(0,2).toUpperCase()||"??";
+  const bg = p.color || "#333";
+  return `<div class="head-wrap" style="width:${size}px;height:${size}px;border-color:${bg}33">
+    <img src="${src}" alt="${p.name}" 
+      onerror="this.classList.add('failed');this.onerror=null">
+    <div class="head-fallback" style="background:${bg}">${initials}</div>
+  </div>`;
 }
 
 /* ─── STATE ──────────────────────────────────────── */
-let tab="overall";
+let tab = "overall";
 function score(p){
-  return tab==="civ"?p.civ:tab==="hg"?p.hg:tab==="uhc"?p.uhc:(p.civ+p.hg+p.uhc)/3;
+  return tab==="civ"?p.civ : tab==="hg"?p.hg : tab==="uhc"?p.uhc : (p.civ+p.hg+p.uhc)/3;
 }
 
 /* ─── BADGES ─────────────────────────────────────── */
@@ -487,53 +555,47 @@ function badgeRow(ids){
 
 /* ─── POSITION CELL ──────────────────────────────── */
 function posHTML(i){
-  if(i===0)return`<div class="medal m1">1</div>`;
-  if(i===1)return`<div class="medal m2">2</div>`;
-  if(i===2)return`<div class="medal m3">3</div>`;
-  return`<span class="pnum">${i+1}</span>`;
+  if(i===0)return`<div class="place-badge place-1">1</div>`;
+  if(i===1)return`<div class="place-badge place-2">2</div>`;
+  if(i===2)return`<div class="place-badge place-3">3</div>`;
+  return`<span class="place-num">${i+1}</span>`;
 }
 
 /* ─── RENDER TABLE ───────────────────────────────── */
 function render(){
-  const body=document.getElementById("tbody");
-  const all=typeof PLAYERS!=="undefined"?PLAYERS:[];
+  const body = document.getElementById("tbody");
+  const all = typeof PLAYERS !== "undefined" ? PLAYERS : [];
 
-  // filter then sort
-  const pool=all.filter(p=>score(p)>0).sort((a,b)=>score(b)-score(a));
+  const pool = all.filter(p=>score(p)>0).sort((a,b)=>score(b)-score(a));
 
-  // stats
-  document.getElementById("sPlayers").textContent=all.length;
-  document.getElementById("sPoints").textContent=all.reduce((s,p)=>s+p.civ+p.hg+p.uhc,0).toLocaleString();
+  document.getElementById("sPlayers").textContent = all.length;
+  document.getElementById("sPoints").textContent = all.reduce((s,p)=>s+p.civ+p.hg+p.uhc,0).toLocaleString();
 
-  // column highlight
   ["hCiv","hHg","hUhc","hOv"].forEach(id=>{document.getElementById(id).style.color=""});
   const colMap={overall:"hOv",civ:"hCiv",hg:"hHg",uhc:"hUhc"};
   const colColor={overall:"var(--text)",civ:"var(--civ)",hg:"var(--hg)",uhc:"var(--uhc)"};
-  document.getElementById(colMap[tab]).style.color=colColor[tab];
+  document.getElementById(colMap[tab]).style.color = colColor[tab];
 
   if(!pool.length){
     body.innerHTML=`<tr class="empty"><td colspan="6">No players with points in this mode yet.</td></tr>`;
     return;
   }
 
-  // rank based on active tab
   function tabPts(p){return tab==="civ"?p.civ:tab==="hg"?p.hg:tab==="uhc"?p.uhc:(p.civ+p.hg+p.uhc)/3;}
 
-  body.innerHTML=pool.map((p,i)=>{
-    const ov=(p.civ+p.hg+p.uhc)/3;
-    const rk=getRank(Math.round(tabPts(p)));
-    const ovDisp=ov%1===0?ov:ov.toFixed(1);
+  body.innerHTML = pool.map((p,i)=>{
+    const ov = (p.civ+p.hg+p.uhc)/3;
+    const rk = getRank(Math.round(tabPts(p)));
+    const ovDisp = ov%1===0 ? ov : ov.toFixed(1);
     return`<tr data-name="${encodeURIComponent(p.name)}" data-pos="${i+1}">
       <td class="c pos">${posHTML(i)}</td>
       <td>
         <div class="pcell">
-          <div class="av" style="background:${p.color}">${p.avatar}</div>
+          ${headHTML(p, 40)}
           <div class="pinfo">
             <div class="pname">
               ${p.name}
-              <span class="rbadge" style="color:${rk.color}">
-                ${rankImg(rk,14)}${rk.label}
-              </span>
+              ${rankBadge(rk)}
             </div>
             <div class="brow">${badgeRow(p.badges)}</div>
           </div>
@@ -548,35 +610,46 @@ function render(){
 
   body.querySelectorAll("tr[data-name]").forEach(row=>{
     row.addEventListener("click",()=>{
-      const p=(typeof PLAYERS!=="undefined")?PLAYERS.find(x=>x.name===decodeURIComponent(row.dataset.name)):null;
-      if(p)openModal(p,parseInt(row.dataset.pos));
+      const p = (typeof PLAYERS!=="undefined") ? PLAYERS.find(x=>x.name===decodeURIComponent(row.dataset.name)) : null;
+      if(p) openModal(p, parseInt(row.dataset.pos));
     });
   });
 }
 
 /* ─── MODAL ──────────────────────────────────────── */
 function fillCard(tierId, ptsId, pts){
-  const el=document.getElementById(tierId);
-  const rk=getRank(Math.round(pts));
-  el.innerHTML=`${rankImg(rk,24)}<span class="mcard-name" style="color:${rk.color}">${rk.label}</span>`;
-  document.getElementById(ptsId).textContent=pts%1===0?pts:pts.toFixed(1);
+  const el = document.getElementById(tierId);
+  const rk = getRank(Math.round(pts));
+  el.innerHTML = `${rankImg(rk,24)}<span class="mcard-name" style="color:${rk.color}">${rk.name} ${rk.sub}</span>`;
+  document.getElementById(ptsId).textContent = pts%1===0 ? pts : pts.toFixed(1);
 }
 
-function openModal(p,pos){
-  const ov=(p.civ+p.hg+p.uhc)/3;
-  document.getElementById("mAv").textContent=p.avatar;
-  document.getElementById("mAv").style.background=p.color;
-  document.getElementById("mName").textContent=p.name;
-  document.getElementById("mPos").textContent=`#${pos}`;
+function openModal(p, pos){
+  const ov = (p.civ+p.hg+p.uhc)/3;
+  const initials = p.name.replace(/[^a-zA-Z0-9]/g,"").slice(0,2).toUpperCase()||"??";
 
-  const mb=document.getElementById("mBadges");
-  mb.innerHTML="";
+  /* set head image in modal */
+  const mImg = document.getElementById("mAvImg");
+  const mFb  = document.getElementById("mAvFallback");
+  const mWrap = document.getElementById("mAvWrap");
+  mImg.classList.remove("failed");
+  mImg.src = headSrc(p);
+  mImg.alt = p.name;
+  mFb.textContent = initials;
+  mFb.style.background = p.color || "#333";
+  mImg.onerror = function(){ this.classList.add("failed"); this.onerror=null; };
+
+  document.getElementById("mName").textContent = p.name;
+  document.getElementById("mPos").textContent = `#${pos}`;
+
+  const mb = document.getElementById("mBadges");
+  mb.innerHTML = "";
   if(p.badges&&p.badges.length&&typeof BADGES!=="undefined"){
     p.badges.forEach(id=>{
-      const b=BADGES[id];if(!b)return;
-      const s=document.createElement("span");
-      s.className="mbadge";
-      s.innerHTML=`<img src="${b.icon}" onerror="this.style.display='none'">${b.name}`;
+      const b = BADGES[id]; if(!b) return;
+      const s = document.createElement("span");
+      s.className = "mbadge";
+      s.innerHTML = `<img src="${b.icon}" onerror="this.style.display='none'">${b.name}`;
       mb.appendChild(s);
     });
   }
@@ -599,7 +672,7 @@ document.querySelectorAll(".tab").forEach(btn=>{
   btn.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(b=>b.classList.remove("on"));
     btn.classList.add("on");
-    tab=btn.dataset.t;
+    tab = btn.dataset.t;
     render();
   });
 });
