@@ -1,452 +1,609 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SUHC Leaderboards — All Time</title>
 <script src="players.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── Reset & Base ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #0d0d0f;
-  --surface: #141417;
-  --surface2: #1c1c21;
-  --border: #2a2a32;
-  --text: #e8e8f0;
-  --muted: #6b6b80;
-  --accent: #e05c5c;
-  --col-civ: #60a5fa;
-  --col-hg:  #f87171;
-  --col-uhc: #34d399;
-  --col-total: #e8e8f0;
-  --gold:   #f59e0b;
-  --silver: #94a3b8;
-  --bronze: #b45309;
+/* ─── RESET ─────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ─── TOKENS ─────────────────────────────────────── */
+:root{
+  --bg:       #09090b;
+  --s1:       #111115;
+  --s2:       #17171d;
+  --s3:       #1e1e26;
+  --border:   #2a2a36;
+  --border2:  #38384a;
+  --text:     #eaeaf2;
+  --text2:    #9898b4;
+  --muted:    #52526a;
+  --red:      #cc2929;
+  --redglow:  rgba(204,41,41,.20);
+  --redhi:    #e03333;
+  --civ:      #4da6ff;
+  --hg:       #ff6060;
+  --uhc:      #27d49a;
+  --gold:     #f0b429;
+  --silver:   #8fa3b1;
+  --bronze:   #bf7840;
 }
 
-html, body {
-  min-height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+/* ─── BASE ───────────────────────────────────────── */
+html,body{
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:14px;
 }
 
-/* ── Layout ── */
-.page { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
-
-/* ── Header ── */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
-  gap: 16px;
-}
-.header-left { display: flex; align-items: center; gap: 14px; }
-.header-logo { width: 48px; height: 48px; object-fit: contain; }
-.header-title h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.3px; }
-.header-title p  { font-size: 0.8rem; color: var(--muted); }
-.header-stats { display: flex; gap: 28px; text-align: right; flex-shrink: 0; }
-.stat-block .stat-val { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
-.stat-block .stat-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-
-/* ── Tabs ── */
-.tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--border);
-}
-.tab-btn {
-  padding: 8px 18px;
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  color: var(--muted);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  transition: color 0.15s, border-color 0.15s;
-}
-.tab-btn:hover { color: var(--text); }
-.tab-btn.active[data-tab="overall"] { color: var(--col-total); border-bottom-color: var(--col-total); }
-.tab-btn.active[data-tab="civ"]     { color: var(--col-civ);   border-bottom-color: var(--col-civ); }
-.tab-btn.active[data-tab="hg"]      { color: var(--col-hg);    border-bottom-color: var(--col-hg); }
-.tab-btn.active[data-tab="uhc"]     { color: var(--col-uhc);   border-bottom-color: var(--col-uhc); }
-
-/* ── Table ── */
-.lb-table { width: 100%; border-collapse: collapse; }
-.lb-table thead th {
-  padding: 8px 12px;
-  text-align: left;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  border-bottom: 1px solid var(--border);
-}
-.lb-table thead th.right { text-align: right; }
-.lb-table tbody tr {
-  border-bottom: 1px solid var(--border);
-  transition: background 0.12s;
-}
-.lb-table tbody tr:hover { background: var(--surface2); }
-.lb-table tbody td { padding: 10px 12px; vertical-align: middle; }
-.lb-table tbody td.right { text-align: right; }
-
-/* rank column */
-.rank-cell { width: 48px; color: var(--muted); font-weight: 700; font-size: 0.9rem; }
-.rank-icon  { width: 22px; height: 22px; }
-
-/* ── Minecraft Skin Render ── */
-.mc-skin-wrap {
-  position: relative;
-  width: 40px;
-  height: 56px;
-  flex-shrink: 0;
-  /* slight glow based on player colour, set inline */
-  filter: drop-shadow(0 0 6px var(--player-color, #fff3));
-}
-.mc-skin-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  image-rendering: pixelated;
-}
-/* fallback coloured pill shown while/if image fails */
-.mc-skin-fallback {
-  display: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #fff;
-  flex-shrink: 0;
+/* noise texture */
+body::after{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  opacity:.4;
 }
 
-/* player cell */
-.player-cell { display: flex; align-items: center; gap: 12px; }
-.player-info  { display: flex; flex-direction: column; gap: 3px; }
-
-.player-name {
-  font-weight: 700;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
+.page{
+  position:relative;z-index:1;
+  max-width:960px;margin:0 auto;
+  padding:36px 24px 100px;
 }
 
-/* ── Rank Badge (fixed — no stray quotes/arrows) ── */
-.rank-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  white-space: nowrap;
-  letter-spacing: 0.03em;
+/* ─── HEADER ─────────────────────────────────────── */
+.header{
+  display:flex;align-items:center;
+  justify-content:space-between;gap:20px;
+  margin-bottom:0;padding-bottom:28px;
+  border-bottom:1px solid var(--border);
 }
-/* The colored dot inside the badge */
-.rank-badge-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
+.header-left{display:flex;align-items:center;gap:16px}
+.header-logo{
+  width:52px;height:52px;object-fit:contain;
+  filter:drop-shadow(0 0 14px rgba(204,41,41,.55));
+}
+.header-title h1{
+  font-family:'Rajdhani',sans-serif;
+  font-size:1.9rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.5px;
+  line-height:1.05;
+}
+.header-title h1 em{color:var(--red);font-style:normal}
+.header-title p{font-size:.73rem;color:var(--muted);margin-top:3px;letter-spacing:.05em}
+
+.stats{display:flex;gap:30px;flex-shrink:0}
+.stat{text-align:right}
+.stat-val{
+  font-family:'Rajdhani',sans-serif;
+  font-size:2.1rem;font-weight:700;line-height:1;
+  color:var(--red);
+  text-shadow:0 0 24px var(--redglow);
+}
+.stat-lbl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+
+/* red gradient rule */
+.rule{
+  height:2px;margin:0 0 26px;
+  background:linear-gradient(90deg,var(--red) 0%,rgba(204,41,41,.3) 50%,transparent 100%);
 }
 
-/* badges row */
-.badges-row { display: flex; gap: 3px; flex-wrap: wrap; }
-.badge-icon-wrap {
-  position: relative;
-  display: inline-flex;
-  cursor: pointer;
+/* ─── TABS ───────────────────────────────────────── */
+.tabs{
+  display:flex;gap:3px;
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:4px;width:fit-content;
+  margin-bottom:18px;
 }
-.badge-icon-wrap img {
-  width: 18px;
-  height: 18px;
-  display: block;
-  transition: transform 0.1s;
+.tab{
+  padding:7px 22px;
+  background:none;border:none;border-radius:6px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:.88rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.09em;
+  color:var(--muted);cursor:pointer;
+  transition:color .14s,background .14s;
 }
-.badge-icon-wrap:hover img { transform: scale(1.2); }
+.tab:hover{color:var(--text);background:var(--s2)}
+.tab.on[data-t="overall"]{background:var(--s3);color:var(--text);box-shadow:inset 0 0 0 1px var(--border2)}
+.tab.on[data-t="civ"]    {background:rgba(77,166,255,.13);color:var(--civ);box-shadow:inset 0 0 0 1px rgba(77,166,255,.35)}
+.tab.on[data-t="hg"]     {background:rgba(255,96,96,.13);color:var(--hg);box-shadow:inset 0 0 0 1px rgba(255,96,96,.35)}
+.tab.on[data-t="uhc"]    {background:rgba(39,212,154,.13);color:var(--uhc);box-shadow:inset 0 0 0 1px rgba(39,212,154,.35)}
 
-/* tooltip */
-.badge-tooltip {
-  display: none;
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  background: #1e1e28;
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 0.72rem;
-  padding: 4px 9px;
-  border-radius: 5px;
-  pointer-events: none;
-  z-index: 100;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-}
-.badge-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: var(--border);
-}
-.badge-icon-wrap:hover .badge-tooltip { display: block; }
+.hint{font-size:.65rem;color:var(--muted);margin-bottom:12px;padding-left:2px;letter-spacing:.04em}
+.hint b{color:var(--red);font-weight:600}
 
-/* score columns */
-.score { font-size: 0.92rem; font-weight: 700; }
-.score.civ   { color: var(--col-civ); }
-.score.hg    { color: var(--col-hg); }
-.score.uhc   { color: var(--col-uhc); }
-.score.total { color: var(--col-total); }
-.score.zero  { color: var(--muted); }
-
-/* empty state */
-.empty-row td {
-  padding: 48px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.9rem;
+/* ─── TABLE ──────────────────────────────────────── */
+.wrap{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
 }
+table{width:100%;border-collapse:collapse}
+thead th{
+  padding:10px 16px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:.68rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.13em;
+  color:var(--muted);
+  background:var(--s2);
+  border-bottom:1px solid var(--border);
+  text-align:left;
+}
+thead th.r{text-align:right}
+thead th.c{text-align:center}
+
+tbody tr{
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:background .12s;
+  position:relative;
+}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--s2)}
+tbody tr::before{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--red);opacity:0;transition:opacity .14s;
+}
+tbody tr:hover::before{opacity:1}
+
+tbody td{padding:13px 16px;vertical-align:middle}
+tbody td.r{text-align:right}
+tbody td.c{text-align:center}
+
+/* ─── POSITION ───────────────────────────────────── */
+.pos{width:50px}
+.medal{
+  width:28px;height:28px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;
+  color:#111;
+}
+.m1{background:var(--gold);box-shadow:0 0 10px rgba(240,180,41,.4)}
+.m2{background:var(--silver)}
+.m3{background:var(--bronze)}
+.pnum{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:var(--muted)}
+
+/* ─── AVATAR ─────────────────────────────────────── */
+.av{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;color:#fff;
+  flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(255,255,255,.1);
+}
+
+/* ─── PLAYER CELL ────────────────────────────────── */
+.pcell{display:flex;align-items:center;gap:12px}
+.pinfo{}
+.pname{
+  font-family:'Rajdhani',sans-serif;
+  font-size:1.05rem;font-weight:700;letter-spacing:.03em;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+
+/* rank badge (inline with name) */
+.rbadge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'Inter',sans-serif;
+  font-size:.66rem;font-weight:600;
+  padding:2px 8px 2px 5px;border-radius:4px;
+  background:var(--s3);border:1px solid var(--border2);
+  white-space:nowrap;letter-spacing:.02em;
+}
+.rbadge img,.rbadge svg{width:14px;height:14px;display:block;flex-shrink:0}
+
+/* ─── PLAYER BADGES ──────────────────────────────── */
+.brow{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+.bw{position:relative;display:inline-flex;cursor:default}
+.bw img{width:18px;height:18px;display:block;transition:transform .12s;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.bw:hover img{transform:scale(1.3)}
+.btip{
+  display:none;position:absolute;
+  bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);
+  white-space:nowrap;background:var(--s3);border:1px solid var(--border2);
+  color:var(--text);font-size:.69rem;padding:5px 10px;border-radius:5px;
+  pointer-events:none;z-index:300;box-shadow:0 4px 20px rgba(0,0,0,.6);
+}
+.btip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:var(--border2);
+}
+.bw:hover .btip{display:block}
+
+/* ─── SCORES ─────────────────────────────────────── */
+.sc{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700}
+.sc.civ    {color:var(--civ)}
+.sc.hg     {color:var(--hg)}
+.sc.uhc    {color:var(--uhc)}
+.sc.ov     {color:var(--text)}
+.sc.zero   {color:var(--muted);font-weight:500;font-family:'Inter',sans-serif;font-size:.9rem}
+
+.empty td{padding:56px;text-align:center;color:var(--muted);font-size:.9rem}
+
+/* ═══════════════ MODAL ═══════════════ */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(5px);
+  z-index:1000;align-items:center;justify-content:center;padding:20px;
+}
+.overlay.open{display:flex}
+
+.modal{
+  background:var(--s1);
+  border:1px solid var(--border2);border-radius:12px;
+  width:100%;max-width:540px;overflow:hidden;
+  box-shadow:0 0 80px rgba(204,41,41,.12), 0 24px 60px rgba(0,0,0,.75);
+  animation:mIn .2s ease;
+}
+@keyframes mIn{from{transform:scale(.95) translateY(10px);opacity:0}}
+
+.modal-stripe{height:3px;background:linear-gradient(90deg,var(--red),rgba(204,41,41,.2),transparent)}
+
+.mhead{
+  display:flex;align-items:center;gap:16px;
+  padding:22px 24px 18px;border-bottom:1px solid var(--border);
+}
+.mav{
+  width:58px;height:58px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;color:#fff;
+  flex-shrink:0;
+  box-shadow:0 0 0 3px rgba(255,255,255,.1);
+}
+.minfo{flex:1}
+.mname{
+  font-family:'Rajdhani',sans-serif;
+  font-size:1.6rem;font-weight:700;letter-spacing:.04em;
+}
+.mbadges{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.mbadge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.67rem;font-weight:600;
+  padding:2px 7px;border-radius:4px;
+  background:var(--s3);border:1px solid var(--border2);
+  color:var(--text2);
+}
+.mbadge img{width:14px;height:14px}
+.mpos{text-align:right;flex-shrink:0}
+.mpos-n{
+  font-family:'Rajdhani',sans-serif;
+  font-size:2.6rem;font-weight:700;line-height:1;
+  color:var(--red);text-shadow:0 0 24px var(--redglow);
+}
+.mpos-l{font-size:.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+
+/* 4 rank cards */
+.mcards{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+}
+.mcard{background:var(--s1);padding:18px 20px}
+.mcard-lbl{
+  font-size:.63rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.12em;
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.mcard-tier{display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.mcard-tier img,.mcard-tier svg{width:24px;height:24px;flex-shrink:0}
+.mcard-name{
+  font-family:'Rajdhani',sans-serif;
+  font-size:1.15rem;font-weight:700;letter-spacing:.04em;
+}
+.mcard-pts{font-size:.73rem;color:var(--muted)}
+.mcard-pts b{color:var(--text2);font-weight:600}
+
+.mfoot{
+  padding:16px 24px;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;
+}
+.mclose{
+  background:var(--s3);border:1px solid var(--border2);
+  color:var(--text2);font-size:.8rem;font-weight:600;
+  padding:8px 22px;border-radius:6px;cursor:pointer;
+  transition:all .13s;
+}
+.mclose:hover{background:var(--red);border-color:var(--red);color:#fff}
+
+/* ─── SCROLLBAR ──────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- Header -->
-  <header class="header">
-    <div class="header-left">
-      <img class="header-logo" src="icons/logo_2.png" alt="SUHC" onerror="this.style.display='none'"/>
-      <div class="header-title">
-        <h1>All Time Leaderboard</h1>
-        <p>Tracking the legends of Survival UHC</p>
-      </div>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <img class="header-logo" src="icons/logo_2.png" alt="SUHC"
+         onerror="this.style.display='none'"/>
+    <div class="header-title">
+      <h1>All Time <em>Leaderboard</em></h1>
+      <p>Tracking the legends of Survival UHC</p>
     </div>
-    <div class="header-stats">
-      <div class="stat-block">
-        <div class="stat-val" id="stat-players">0</div>
-        <div class="stat-lbl">Players</div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-val" id="stat-points">0</div>
-        <div class="stat-lbl">Points Earned</div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="overall">Overall</button>
-    <button class="tab-btn" data-tab="civ">CIV</button>
-    <button class="tab-btn" data-tab="hg">HG</button>
-    <button class="tab-btn" data-tab="uhc">UHC</button>
   </div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val" id="sPlayers">0</div>
+      <div class="stat-lbl">Players</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="sPoints">0</div>
+      <div class="stat-lbl">Points Earned</div>
+    </div>
+  </div>
+</header>
 
-  <!-- Leaderboard Table -->
-  <table class="lb-table">
+<div class="rule" style="margin-top:26px"></div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab on" data-t="overall">Overall</button>
+  <button class="tab" data-t="civ">CIV</button>
+  <button class="tab" data-t="hg">HG</button>
+  <button class="tab" data-t="uhc">UHC</button>
+</div>
+<p class="hint">Click a player to view their <b>full rank breakdown</b></p>
+
+<!-- TABLE -->
+<div class="wrap">
+  <table>
     <thead>
       <tr>
-        <th class="rank-cell">#</th>
+        <th class="c pos">#</th>
         <th>Player</th>
-        <th class="right" id="col-civ">CIV</th>
-        <th class="right" id="col-hg">HG</th>
-        <th class="right" id="col-uhc">UHC</th>
-        <th class="right" id="col-total">Overall</th>
+        <th class="r" id="hCiv">CIV</th>
+        <th class="r" id="hHg">HG</th>
+        <th class="r" id="hUhc">UHC</th>
+        <th class="r" id="hOv">Overall</th>
       </tr>
     </thead>
-    <tbody id="lb-body">
-      <tr class="empty-row"><td colspan="6">Loading…</td></tr>
+    <tbody id="tbody">
+      <tr class="empty"><td colspan="6">Loading…</td></tr>
     </tbody>
   </table>
+</div>
 
+</div><!-- /page -->
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-stripe"></div>
+    <div class="mhead">
+      <div class="mav" id="mAv">??</div>
+      <div class="minfo">
+        <div class="mname" id="mName">—</div>
+        <div class="mbadges" id="mBadges"></div>
+      </div>
+      <div class="mpos">
+        <div class="mpos-n" id="mPos">#—</div>
+        <div class="mpos-l">Overall Position</div>
+      </div>
+    </div>
+    <div class="mcards">
+      <div class="mcard">
+        <div class="mcard-lbl"><span class="dot" style="background:var(--text)"></span>Overall Rank</div>
+        <div class="mcard-tier" id="rOv"></div>
+        <div class="mcard-pts">Points: <b id="pOv">—</b></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-lbl"><span class="dot" style="background:var(--civ)"></span>CIV Rank</div>
+        <div class="mcard-tier" id="rCiv"></div>
+        <div class="mcard-pts">Points: <b id="pCiv">—</b></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-lbl"><span class="dot" style="background:var(--hg)"></span>HG Rank</div>
+        <div class="mcard-tier" id="rHg"></div>
+        <div class="mcard-pts">Points: <b id="pHg">—</b></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-lbl"><span class="dot" style="background:var(--uhc)"></span>UHC Rank</div>
+        <div class="mcard-tier" id="rUhc"></div>
+        <div class="mcard-pts">Points: <b id="pUhc">—</b></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="mclose" id="mClose">Close</button>
+    </div>
+  </div>
 </div>
 
 <script>
-// ── Rank Tier Definitions ────────────────────────────────────────────────
-const TIERS = [
-  { name: "Wood",      color: "#a16207", ranges: [{roman:"I",min:0,max:14},{roman:"II",min:15,max:20},{roman:"III",min:21,max:27}] },
-  { name: "Stone",     color: "#94a3b8", ranges: [{roman:"I",min:28,max:35},{roman:"II",min:36,max:43},{roman:"III",min:44,max:52}] },
-  { name: "Iron",      color: "#cbd5e1", ranges: [{roman:"I",min:53,max:61},{roman:"II",min:62,max:71},{roman:"III",min:72,max:82}] },
-  { name: "Diamond",   color: "#60a5fa", ranges: [{roman:"I",min:83,max:94},{roman:"II",min:95,max:107},{roman:"III",min:108,max:121}] },
-  { name: "Netherite", color: "#e05c5c", ranges: [{roman:"I",min:122,max:136},{roman:"II",min:137,max:153},{roman:"III",min:154,max:null}] },
+/* ─── TIERS ─────────────────────────────────────────
+   icon: path in your icons/ folder.
+   If the file doesn't exist the onerror handler
+   swaps it for a coloured SVG automatically.
+───────────────────────────────────────────────────── */
+const TIERS=[
+  {name:"Wood",     color:"#a16207", icon:"icons/wood.png",
+   ranges:[{r:"I",min:0,max:14},{r:"II",min:15,max:20},{r:"III",min:21,max:27}]},
+  {name:"Stone",    color:"#8fa3b1", icon:"icons/stone.png",
+   ranges:[{r:"I",min:28,max:35},{r:"II",min:36,max:43},{r:"III",min:44,max:52}]},
+  {name:"Iron",     color:"#c8d6df", icon:"icons/iron.png",
+   ranges:[{r:"I",min:53,max:61},{r:"II",min:62,max:71},{r:"III",min:72,max:82}]},
+  {name:"Diamond",  color:"#4da6ff", icon:"icons/diamond.png",
+   ranges:[{r:"I",min:83,max:94},{r:"II",min:95,max:107},{r:"III",min:108,max:121}]},
+  {name:"Netherite",color:"#cc2929", icon:"icons/netherite.png",
+   ranges:[{r:"I",min:122,max:136},{r:"II",min:137,max:153},{r:"III",min:154,max:null}]},
 ];
 
-function getRank(points) {
-  for (const tier of TIERS) {
-    for (const r of tier.ranges) {
-      if (points >= r.min && (r.max === null || points <= r.max)) {
-        return { label: `${tier.name} ${r.roman}`, color: tier.color };
-      }
-    }
-  }
-  return { label: "Wood I", color: TIERS[0].color };
+// Fallback SVGs per tier name (used when icon file missing)
+const FB={
+  Wood:     `<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#7c5204"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#f0d28a" font-family="sans-serif">W</text></svg>`,
+  Stone:    `<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#54616d"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#ccd" font-family="sans-serif">S</text></svg>`,
+  Iron:     `<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#8fa3b1"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#111" font-family="sans-serif">I</text></svg>`,
+  Diamond:  `<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#1a66cc"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#adf" font-family="sans-serif">D</text></svg>`,
+  Netherite:`<svg viewBox="0 0 20 20" style="width:100%;height:100%"><rect width="20" height="20" rx="3" fill="#8b1c1c"/><text x="10" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#ffaaaa" font-family="sans-serif">N</text></svg>`,
+};
+
+function getRank(pts){
+  for(const t of TIERS)
+    for(const r of t.ranges)
+      if(pts>=r.min&&(r.max===null||pts<=r.max))
+        return{label:`${t.name} ${r.r}`,color:t.color,tier:t.name,icon:t.icon};
+  return{label:"Wood I",color:TIERS[0].color,tier:"Wood",icon:TIERS[0].icon};
 }
 
-// ── Skin URL helper ──────────────────────────────────────────────────────
-// If `skin` looks like a URL (starts with http), use it directly.
-// Otherwise treat it as a Minecraft username and hit crafatar for a
-// full-body render. Falls back to Steve if the player has no `skin` set.
-const STEVE_RENDER = "https://crafatar.com/renders/body/8667ba71-b85a-4004-af54-457a9734eed7?overlay=true&scale=4";
-
-function getSkinRenderUrl(skin) {
-  if (!skin) return STEVE_RENDER;
-  if (skin.startsWith("http://") || skin.startsWith("https://")) {
-    // Direct skin PNG — use crafatar's skin endpoint
-    return skin; // user must provide a render URL themselves in this case
-  }
-  // Minecraft username → crafatar body render by username
-  // We use the name-based endpoint so no UUID lookup is needed
-  return `https://crafatar.com/renders/body/${encodeURIComponent(skin)}?overlay=true&scale=4`;
+// Build an img that falls back to inline SVG
+function rankImg(rank,size){
+  const s=size||14;
+  const fb=FB[rank.tier]||FB.Wood;
+  // escape quotes for onerror attribute
+  const esc=fb.replace(/"/g,"&quot;");
+  return `<img src="${rank.icon}" width="${s}" height="${s}"
+    style="display:block;flex-shrink:0;border-radius:2px"
+    onerror="this.outerHTML='<span style=\\"display:inline-flex;width:${s}px;height:${s}px\\">${esc}</span>'"/>`;
 }
 
-// ── Tab State ────────────────────────────────────────────────────────────
-let currentTab = "overall";
-
-// ── Helpers ──────────────────────────────────────────────────────────────
-function getTabScore(p) {
-  switch (currentTab) {
-    case "civ": return p.civ;
-    case "hg":  return p.hg;
-    case "uhc": return p.uhc;
-    default:    return (p.civ + p.hg + p.uhc) / 3;
-  }
+/* ─── STATE ──────────────────────────────────────── */
+let tab="overall";
+function score(p){
+  return tab==="civ"?p.civ:tab==="hg"?p.hg:tab==="uhc"?p.uhc:(p.civ+p.hg+p.uhc)/3;
 }
 
-function renderBadges(badgeIds) {
-  if (!badgeIds || badgeIds.length === 0) return "";
-  return badgeIds.map(id => {
-    const b = BADGES[id];
-    if (!b) return "";
-    return `
-      <span class="badge-icon-wrap">
-        <img src="${b.icon}" alt="${b.name}">
-        <span class="badge-tooltip">${b.name} — ${b.desc}</span>
-      </span>`;
+/* ─── BADGES ─────────────────────────────────────── */
+function badgeRow(ids){
+  if(!ids||!ids.length)return"";
+  return ids.map(id=>{
+    const b=(typeof BADGES!=="undefined")?BADGES[id]:null;
+    if(!b)return"";
+    return`<span class="bw"><img src="${b.icon}" alt="${b.name}" onerror="this.style.display='none'"><span class="btip">${b.name} — ${b.desc}</span></span>`;
   }).join("");
 }
 
-function renderRankBadge(points) {
-  const r = getRank(Math.round(points));
-  return `<span class="rank-badge">
-    <span class="rank-badge-dot" style="background:${r.color}"></span>
-    <span style="color:${r.color}">${r.label}</span>
-  </span>`;
+/* ─── POSITION CELL ──────────────────────────────── */
+function posHTML(i){
+  if(i===0)return`<div class="medal m1">1</div>`;
+  if(i===1)return`<div class="medal m2">2</div>`;
+  if(i===2)return`<div class="medal m3">3</div>`;
+  return`<span class="pnum">${i+1}</span>`;
 }
 
-function medalIcon(pos) {
-  const medals = [
-    `<svg class="rank-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#f59e0b" opacity="0.15"/><circle cx="12" cy="12" r="7" fill="#f59e0b"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1a1a">1</text></svg>`,
-    `<svg class="rank-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#94a3b8" opacity="0.15"/><circle cx="12" cy="12" r="7" fill="#94a3b8"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1a1a">2</text></svg>`,
-    `<svg class="rank-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#b45309" opacity="0.15"/><circle cx="12" cy="12" r="7" fill="#b45309"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1a1a">3</text></svg>`,
-  ];
-  return pos < 3 ? medals[pos] : `<span style="color:var(--muted);font-weight:700">${pos+1}</span>`;
-}
+/* ─── RENDER TABLE ───────────────────────────────── */
+function render(){
+  const body=document.getElementById("tbody");
+  const all=typeof PLAYERS!=="undefined"?PLAYERS:[];
 
-// ── Render ────────────────────────────────────────────────────────────────
-function render() {
-  const body = document.getElementById("lb-body");
+  // filter then sort
+  const pool=all.filter(p=>score(p)>0).sort((a,b)=>score(b)-score(a));
 
-  let players = PLAYERS.filter(p => getTabScore(p) > 0);
-  players = players.slice().sort((a, b) => getTabScore(b) - getTabScore(a));
+  // stats
+  document.getElementById("sPlayers").textContent=all.length;
+  document.getElementById("sPoints").textContent=all.reduce((s,p)=>s+p.civ+p.hg+p.uhc,0).toLocaleString();
 
-  document.getElementById("stat-players").textContent = players.length;
-  const totalPts = PLAYERS.reduce((s, p) => s + p.civ + p.hg + p.uhc, 0);
-  document.getElementById("stat-points").textContent = totalPts.toLocaleString();
+  // column highlight
+  ["hCiv","hHg","hUhc","hOv"].forEach(id=>{document.getElementById(id).style.color=""});
+  const colMap={overall:"hOv",civ:"hCiv",hg:"hHg",uhc:"hUhc"};
+  const colColor={overall:"var(--text)",civ:"var(--civ)",hg:"var(--hg)",uhc:"var(--uhc)"};
+  document.getElementById(colMap[tab]).style.color=colColor[tab];
 
-  // Highlight active column header
-  ["civ","hg","uhc","total"].forEach(c => {
-    const el = document.getElementById(`col-${c}`);
-    if (el) el.style.color = "";
-  });
-  const colMap    = { overall:"total", civ:"civ", hg:"hg", uhc:"uhc" };
-  const colColors = { overall:"var(--col-total)", civ:"var(--col-civ)", hg:"var(--col-hg)", uhc:"var(--col-uhc)" };
-  const colEl = document.getElementById(`col-${colMap[currentTab]}`);
-  if (colEl) colEl.style.color = colColors[currentTab];
-
-  if (players.length === 0) {
-    body.innerHTML = `<tr class="empty-row"><td colspan="6">No players with points in this mode yet.</td></tr>`;
+  if(!pool.length){
+    body.innerHTML=`<tr class="empty"><td colspan="6">No players with points in this mode yet.</td></tr>`;
     return;
   }
 
-  body.innerHTML = players.map((p, i) => {
-    const civ     = p.civ;
-    const hg      = p.hg;
-    const uhc     = p.uhc;
-    const overall = (civ + hg + uhc) / 3;
+  // rank based on active tab
+  function tabPts(p){return tab==="civ"?p.civ:tab==="hg"?p.hg:tab==="uhc"?p.uhc:(p.civ+p.hg+p.uhc)/3;}
 
-    let rankPoints;
-    switch (currentTab) {
-      case "civ": rankPoints = civ; break;
-      case "hg":  rankPoints = hg;  break;
-      case "uhc": rankPoints = uhc; break;
-      default:    rankPoints = overall; break;
-    }
-
-    const overallDisplay = overall % 1 === 0 ? overall : overall.toFixed(1);
-    const skinUrl        = getSkinRenderUrl(p.skin);
-    // initials fallback
-    const initials       = p.name.slice(0, 2).toUpperCase();
-
-    return `
-      <tr>
-        <td class="rank-cell">${medalIcon(i)}</td>
-        <td>
-          <div class="player-cell">
-            <div class="mc-skin-wrap" style="--player-color:${p.color}">
-              <img
-                src="${skinUrl}"
-                alt="${p.name} skin"
-                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-              />
-              <div class="mc-skin-fallback" style="background:${p.color}">${initials}</div>
+  body.innerHTML=pool.map((p,i)=>{
+    const ov=(p.civ+p.hg+p.uhc)/3;
+    const rk=getRank(Math.round(tabPts(p)));
+    const ovDisp=ov%1===0?ov:ov.toFixed(1);
+    return`<tr data-name="${encodeURIComponent(p.name)}" data-pos="${i+1}">
+      <td class="c pos">${posHTML(i)}</td>
+      <td>
+        <div class="pcell">
+          <div class="av" style="background:${p.color}">${p.avatar}</div>
+          <div class="pinfo">
+            <div class="pname">
+              ${p.name}
+              <span class="rbadge" style="color:${rk.color}">
+                ${rankImg(rk,14)}${rk.label}
+              </span>
             </div>
-            <div class="player-info">
-              <div class="player-name">
-                ${p.name}
-                ${renderRankBadge(rankPoints)}
-              </div>
-              <div class="badges-row">${renderBadges(p.badges)}</div>
-            </div>
+            <div class="brow">${badgeRow(p.badges)}</div>
           </div>
-        </td>
-        <td class="right"><span class="score civ ${civ===0?'zero':''}">${civ}</span></td>
-        <td class="right"><span class="score hg  ${hg===0?'zero':''}">${hg}</span></td>
-        <td class="right"><span class="score uhc ${uhc===0?'zero':''}">${uhc}</span></td>
-        <td class="right"><span class="score total">${overallDisplay}</span></td>
-      </tr>`;
+        </div>
+      </td>
+      <td class="r"><span class="sc civ${p.civ===0?" zero":""}">${p.civ}</span></td>
+      <td class="r"><span class="sc hg${p.hg===0?" zero":""}">${p.hg}</span></td>
+      <td class="r"><span class="sc uhc${p.uhc===0?" zero":""}">${p.uhc}</span></td>
+      <td class="r"><span class="sc ov">${ovDisp}</span></td>
+    </tr>`;
   }).join("");
+
+  body.querySelectorAll("tr[data-name]").forEach(row=>{
+    row.addEventListener("click",()=>{
+      const p=(typeof PLAYERS!=="undefined")?PLAYERS.find(x=>x.name===decodeURIComponent(row.dataset.name)):null;
+      if(p)openModal(p,parseInt(row.dataset.pos));
+    });
+  });
 }
 
-// ── Tab clicks ────────────────────────────────────────────────────────────
-document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    currentTab = btn.dataset.tab;
+/* ─── MODAL ──────────────────────────────────────── */
+function fillCard(tierId, ptsId, pts){
+  const el=document.getElementById(tierId);
+  const rk=getRank(Math.round(pts));
+  el.innerHTML=`${rankImg(rk,24)}<span class="mcard-name" style="color:${rk.color}">${rk.label}</span>`;
+  document.getElementById(ptsId).textContent=pts%1===0?pts:pts.toFixed(1);
+}
+
+function openModal(p,pos){
+  const ov=(p.civ+p.hg+p.uhc)/3;
+  document.getElementById("mAv").textContent=p.avatar;
+  document.getElementById("mAv").style.background=p.color;
+  document.getElementById("mName").textContent=p.name;
+  document.getElementById("mPos").textContent=`#${pos}`;
+
+  const mb=document.getElementById("mBadges");
+  mb.innerHTML="";
+  if(p.badges&&p.badges.length&&typeof BADGES!=="undefined"){
+    p.badges.forEach(id=>{
+      const b=BADGES[id];if(!b)return;
+      const s=document.createElement("span");
+      s.className="mbadge";
+      s.innerHTML=`<img src="${b.icon}" onerror="this.style.display='none'">${b.name}`;
+      mb.appendChild(s);
+    });
+  }
+
+  fillCard("rOv", "pOv",  ov);
+  fillCard("rCiv","pCiv", p.civ);
+  fillCard("rHg", "pHg",  p.hg);
+  fillCard("rUhc","pUhc", p.uhc);
+
+  document.getElementById("overlay").classList.add("open");
+}
+
+function closeModal(){document.getElementById("overlay").classList.remove("open")}
+document.getElementById("mClose").addEventListener("click",closeModal);
+document.getElementById("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
+/* ─── TABS ───────────────────────────────────────── */
+document.querySelectorAll(".tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("on"));
+    btn.classList.add("on");
+    tab=btn.dataset.t;
     render();
   });
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────
 render();
 </script>
 </body>
