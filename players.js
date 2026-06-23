@@ -82,19 +82,10 @@ const PLAYERS = [
     name: "sithslayer337",
     // head: "sithslayer337.png",
     color: "#7c3aed",
-    civ: 203,
-    hg: 77,
+    civ: 1,
+    hg: 1,
     uhc: 0,
     badges: ["og", "contributor", "hoster", "inviter"]
-  },
-  {
-    name: "Verxza x",
-    // head: "verxza_x.png",
-    color: "#7c3aed",
-    civ: 150,
-    hg: 12,
-    uhc: 110,
-    badges: ["og", "contributor"]
   },
   {
     name: "s1thslxyer33",
@@ -190,7 +181,7 @@ const PLAYERS = [
     civ: 26,
     hg: 0,
     uhc: 0,
-    badges: ["og"]
+    badges: ["og", "contributor"]
   },
   {
     name: "Yodudepizzia9",
