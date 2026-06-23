@@ -79,30 +79,189 @@ const BADGES = {
 
 const PLAYERS = [
   {
-    name: "FatherAJT",
-    // head: "fatherajt.png",   ← uncomment & add file to icons/heads/ to use custom head
-    color: "#c0392b",
-    civ: 1000,
-    hg: 900,
-    uhc: 850,
-    badges: ["og", "executive", "hoster"]
-  },
-  {
     name: "sithslayer337",
     // head: "sithslayer337.png",
     color: "#7c3aed",
     civ: 203,
     hg: 77,
     uhc: 0,
-    badges: ["og", "contributor"]
+    badges: ["og", "contributor", "hoster", "inviter"]
   },
   {
-    name: "Verxza_x",
+    name: "Verxza x",
     // head: "verxza_x.png",
     color: "#7c3aed",
     civ: 150,
     hg: 12,
     uhc: 110,
+    badges: ["og", "contributor"]
+  },
+  {
+    name: "s1thslxyer33",
+    color: "#888888",
+    civ: 0,
+    hg: 0,
+    uhc: 0,
+    badges: ["og", "contributor", "hoster", "inviter"]
+  },
+  {
+    name: "G3RM4NHD",
+    color: "#888888",
+    civ: 7,
+    hg: 0,
+    uhc: 0,
+    badges: ["og"]
+  },
+  {
+    name: "HunterA23",
+    color: "#888888",
+    civ: 10,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "Mr divel8118",
+    color: "#888888",
+    civ: 10,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "Ultra Glizzy",
+    color: "#888888",
+    civ: 10,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "FGKPLAYZ",
+    color: "#888888",
+    civ: 13,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "Giantcoolben733",
+    color: "#888888",
+    civ: 20,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "Itzrealvexy",
+    color: "#888888",
+    civ: 21,
+    hg: 0,
+    uhc: 0,
+    badges: ["og","contributor"]
+  },
+  {
+    name: "Badboy7068",
+    color: "#888888",
+    civ: 25,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "BattierCrown747",
+    color: "#888888",
+    civ: 25,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "Milkshake7464",
+    color: "#888888",
+    civ: 25,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "Verxza x",
+    color: "#888888",
+    civ: 26,
+    hg: 0,
+    uhc: 0,
+    badges: ["og"]
+  },
+  {
+    name: "Yodudepizzia9",
+    color: "#888888",
+    civ: 27,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "maccy1511",
+    color: "#888888",
+    civ: 29,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "RequiemXV2",
+    color: "#888888",
+    civ: 29,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "TenTonic7124",
+    color: "#888888",
+    civ: 33,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "BlitsyMC",
+    color: "#888888",
+    civ: 35,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "dannycb69",
+    color: "#888888",
+    civ: 38,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "Bigshaq2067",
+    color: "#888888",
+    civ: 53,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "Doomer99218",
+    color: "#888888",
+    civ: 69,
+    hg: 0,
+    uhc: 0,
+    badges: []
+  },
+  {
+    name: "Crackyleony",
+    color: "#888888",
+    civ: 125,
+    hg: 0,
+    uhc: 0,
     badges: []
   }
 ];
