@@ -79,23 +79,6 @@ const BADGES = {
 
 const PLAYERS = [
   {
-    name: "sithslayer337",
-    // head: "sithslayer337.png",
-    color: "#7c3aed",
-    civ: 1,
-    hg: 1,
-    uhc: 0,
-    badges: ["og", "contributor", "hoster", "inviter"]
-  },
-  {
-    name: "s1thslxyer33",
-    color: "#888888",
-    civ: 0,
-    hg: 0,
-    uhc: 0,
-    badges: ["og", "contributor", "hoster", "inviter"]
-  },
-  {
     name: "G3RM4NHD",
     color: "#888888",
     civ: 7,
