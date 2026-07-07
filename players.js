@@ -4,13 +4,17 @@
  * HOW TO ADD A PLAYER:
  * Add an object to the PLAYERS array with:
  *   name   : "PlayerName"
- *   head   : "filename.png" (optional — file in icons/heads/; if omitted, or if the
- *            file 404s, the site automatically falls back to icons/heads/default.png)
  *   color  : "#hexcolor" (used for accent/border on head; also fallback bg)
  *   civ    : number (CIV points — set 0 if none)
  *   hg     : number (HG points — set 0 if none)
  *   uhc    : number (UHC points — set 0 if none)
  *   badges : [] (array of badge IDs — see BADGES below, or leave empty [])
+ *
+ * HEAD TEXTURES:
+ * No need to set anything here — the site automatically looks for
+ * icons/heads/<name>.png (matching the player's exact "name" above).
+ * If that file doesn't exist, it automatically falls back to
+ * icons/heads/default.png.
  *
  * HOW TO ADD A BADGE TO A PLAYER:
  * Just add the badge id string to their badges array.
@@ -26,7 +30,7 @@
  *   "civ_champion" — CIV Champion
  *   "contributor"  — Contributor
  */
- 
+
 const BADGES = {
     og: { id: "og", name: "OG", icon: "icons/badge_og.png", desc: "Original Member — been here since the beginning" },
     hoster: { id: "hoster", name: "Hoster", icon: "icons/badge_hoster.png", desc: "Hoster — has hosted games for the community" },
@@ -37,25 +41,25 @@ const BADGES = {
     civ_champion: { id: "civ_champion", name: "CIV Champion", icon: "icons/badge_civ_champion.png", desc: "CIV Champion — won a Civilization tournament" },
     contributor: { id: "contributor", name: "Contributor", icon: "icons/badge_contributor.png", desc: "Contributor — helped build or improve the server/community" }
 };
- 
+
 const PLAYERS = [
     { name: "CarsonMess", color: "#888888", civ: 0, hg: 0, uhc: 3, badges: [] },
     { name: "USB Zlone", color: "#888888", civ: 0, hg: 0, uhc: 3, badges: [] },
-    { name: "Imyoweakness", head: "Imyoweakness.png", color: "#888888", civ: 3, hg: 0, uhc: 0, badges: [] },
+    { name: "Imyoweakness", color: "#888888", civ: 3, hg: 0, uhc: 0, badges: [] },
     { name: "UserAbuser1493", color: "#888888", civ: 3, hg: 0, uhc: 0, badges: [] },
-    { name: "OddRugX", head: "OddRugX.png", color: "#888888", civ: 3, hg: 0, uhc: 0, badges: [] },
+    { name: "OddRugX", color: "#888888", civ: 3, hg: 0, uhc: 0, badges: [] },
     { name: "Devontie23", color: "#888888", civ: 3, hg: 0, uhc: 0, badges: [] },
     { name: "xfzen", color: "#888888", civ: 0, hg: 0, uhc: 6, badges: [] },
     { name: "The one694497", color: "#888888", civ: 0, hg: 0, uhc: 6, badges: [] },
     { name: "Geno7L", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
-    { name: "clutchalt129", head: "clutchalt129.png", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
+    { name: "clutchalt129", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "FlameBlaze9354", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
-    { name: "JoeyIsFrog", head: "JoeyIsFrog.png", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
+    { name: "JoeyIsFrog", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "itsmixll", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "EvPett20", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "Mid0099123", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "Rowanshots71", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
-    { name: "Miracbenli", head: "Miracbenli.png", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
+    { name: "Miracbenli", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "Blueaxe251884", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "DireDawn1527", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "OL BOSO", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
@@ -66,7 +70,7 @@ const PLAYERS = [
     { name: "RreapintTrap", color: "#888888", civ: 9, hg: 0, uhc: 0, badges: [] },
     { name: "ItsMini Tower", color: "#888888", civ: 9, hg: 0, uhc: 0, badges: [] },
     { name: "MozeBelaben", color: "#888888", civ: 9, hg: 0, uhc: 0, badges: [] },
-    { name: "Abyssall009572", head: "Abyssal009572.png", color: "#888888", civ: 9, hg: 0, uhc: 0, badges: [] },
+    { name: "Abyssall009572", color: "#888888", civ: 9, hg: 0, uhc: 0, badges: [] },
     { name: "RaMiGamer8245", color: "#888888", civ: 9, hg: 0, uhc: 0, badges: [] },
     { name: "HunterA23", color: "#888888", civ: 10, hg: 0, uhc: 0, badges: [] },
     { name: "Mr divel8118", color: "#888888", civ: 10, hg: 0, uhc: 0, badges: [] },
@@ -87,7 +91,7 @@ const PLAYERS = [
     { name: "zvryyy", color: "#888888", civ: 17, hg: 0, uhc: 0, badges: [] },
     { name: "Badboy7068", color: "#888888", civ: 19, hg: 0, uhc: 0, badges: [] },
     { name: "ItzCazry", color: "#888888", civ: 15, hg: 0, uhc: 6, badges: [] },
-    { name: "FGKPLAYZ", head: "FGKPLAYZ.png", color: "#888888", civ: 21, hg: 0, uhc: 0, badges: [] },
+    { name: "FGKPLAYZ", color: "#888888", civ: 21, hg: 0, uhc: 0, badges: [] },
     { name: "GoincraZy6", color: "#888888", civ: 21, hg: 0, uhc: 0, badges: [] },
     { name: "Kyle8285", color: "#888888", civ: 0, hg: 0, uhc: 24, badges: [] },
     { name: "UnrulyBrayden", color: "#888888", civ: 25, hg: 0, uhc: 0, badges: [] },
@@ -107,41 +111,42 @@ const PLAYERS = [
     { name: "o Cocun1043", color: "#888888", civ: 38, hg: 0, uhc: 0, badges: [] },
     { name: "Maxplayzxbox179", color: "#888888", civ: 0, hg: 0, uhc: 39, badges: [] },
     { name: "DecaylngSky", color: "#888888", civ: 40, hg: 0, uhc: 0, badges: [] },
-    { name: "Thermicbong32", head: "Thermicbong32.png", color: "#888888", civ: 41, hg: 0, uhc: 0, badges: [] },
+    { name: "Thermicbong32", color: "#888888", civ: 41, hg: 0, uhc: 0, badges: [] },
     { name: "Cruqdeeee", color: "#888888", civ: 43, hg: 0, uhc: 0, badges: [] },
     { name: "thend555735", color: "#888888", civ: 44, hg: 0, uhc: 0, badges: [] },
     { name: "Crackykleony", color: "#888888", civ: 44, hg: 0, uhc: 0, badges: [] },
     { name: "dannycb69", color: "#888888", civ: 48, hg: 0, uhc: 0, badges: [] },
     { name: "Your Toxic2950", color: "#888888", civ: 48, hg: 0, uhc: 0, badges: [] },
-    { name: "sqeexzy", head: "squeexzy.png", color: "#888888", civ: 48, hg: 0, uhc: 0, badges: [] },
+    { name: "sqeexzy", color: "#888888", civ: 48, hg: 0, uhc: 0, badges: [] },
     { name: "Bread4Bone", color: "#888888", civ: 38, hg: 0, uhc: 12, badges: [] },
     { name: "Boogieman881", color: "#888888", civ: 50, hg: 0, uhc: 0, badges: ["contributor"] },
     { name: "Xxzert1050", color: "#888888", civ: 0, hg: 0, uhc: 57, badges: [] },
-    { name: "Itzrealvexy", head: "Itzrealvexy.png", color: "#888888", civ: 26, hg: 0, uhc: 34, badges: ["og", "contributor"] },
+    { name: "Itzrealvexy", color: "#888888", civ: 26, hg: 0, uhc: 34, badges: ["og", "contributor"] },
     { name: "Cube Ox", color: "#888888", civ: 19, hg: 0, uhc: 44, badges: [] },
-    { name: "Verxza x", head: "Verxza x.png", color: "#888888", civ: 35, hg: 0, uhc: 28, badges: ["og", "contributor"] },
+    { name: "Verxza x", color: "#888888", civ: 35, hg: 0, uhc: 28, badges: ["og", "contributor"] },
     { name: "Giantcoolben733", color: "#888888", civ: 10, hg: 0, uhc: 54, badges: [] },
     { name: "Yodudepizzia9", color: "#888888", civ: 27, hg: 0, uhc: 37, badges: [] },
     { name: "Plague0171", color: "#888888", civ: 27, hg: 0, uhc: 37, badges: [] },
     { name: "XeroX Goatt", color: "#888888", civ: 37, hg: 0, uhc: 27, badges: [] },
-    { name: "Jackson1232246", head: "Jackson1232246.png", color: "#888888", civ: 64, hg: 0, uhc: 0, badges: [] },
-    { name: "Drenren", head: "Drenren.png", color: "#888888", civ: 30, hg: 0, uhc: 39, badges: [] },
+    { name: "Jackson1232246", color: "#888888", civ: 64, hg: 0, uhc: 0, badges: [] },
+    { name: "Drenren", color: "#888888", civ: 30, hg: 0, uhc: 39, badges: [] },
     { name: "TroddenToast412", color: "#888888", civ: 80, hg: 0, uhc: 0, badges: [] },
     { name: "Diamond24891", color: "#888888", civ: 7, hg: 0, uhc: 75, badges: [] },
-    { name: "Doomer99218", head: "Doomer99218.png", color: "#888888", civ: 83, hg: 0, uhc: 0, badges: [] },
-    { name: "s1thslxyer33", head: "sithslayer337.png", color: "#888888", civ: 85, hg: 0, uhc: 0, badges: [] },
+    { name: "Doomer99218", color: "#888888", civ: 83, hg: 0, uhc: 0, badges: [] },
+    { name: "s1thslxyer33", color: "#888888", civ: 85, hg: 0, uhc: 0, badges: [] },
     { name: "pumpkinfan78", color: "#888888", civ: 85, hg: 0, uhc: 0, badges: [] },
-    { name: "Kaiistooicy", head: "KaiistooIcy.png", color: "#888888", civ: 31, hg: 0, uhc: 58, badges: ["og"] },
+    { name: "Kaiistooicy", color: "#888888", civ: 31, hg: 0, uhc: 58, badges: ["og"] },
     { name: "TecTonic7124", color: "#888888", civ: 35, hg: 0, uhc: 56, badges: [] },
-    { name: "Bigshaq2067", head: "Bigshaq42067.png", color: "#888888", civ: 99, hg: 0, uhc: 0, badges: [] },
+    { name: "Bigshaq2067", color: "#888888", civ: 99, hg: 0, uhc: 0, badges: [] },
     { name: "BridalOx7970024", color: "#888888", civ: 26, hg: 0, uhc: 90, badges: [] },
     { name: "nightmarealt910", color: "#888888", civ: 40, hg: 0, uhc: 80, badges: [] },
-    { name: "TodayBadge5645", head: "TodayBadge5645.png", color: "#888888", civ: 76, hg: 0, uhc: 45, badges: [] },
-    { name: "Goldieontop2277", head: "Goldieontop2277.png", color: "#888888", civ: 54, hg: 0, uhc: 70, badges: [] },
-    { name: "BattierCrown747", head: "BattierCrown747.png", color: "#888888", civ: 35, hg: 0, uhc: 100, badges: [] },
-    { name: "Jewdah ig", head: "Jewdah ig.png", color: "#888888", civ: 142, hg: 0, uhc: 0, badges: [] },
+    { name: "TodayBadge5645", color: "#888888", civ: 76, hg: 0, uhc: 45, badges: [] },
+    { name: "Goldieontop2277", color: "#888888", civ: 54, hg: 0, uhc: 70, badges: [] },
+    { name: "BattierCrown747", color: "#888888", civ: 35, hg: 0, uhc: 100, badges: [] },
+    { name: "Jewdah ig", color: "#888888", civ: 142, hg: 0, uhc: 0, badges: [] },
     { name: "MrFxber", color: "#888888", civ: 146, hg: 0, uhc: 0, badges: [] },
-    { name: "SwingMCC", head: "SwingMCC.png", color: "#888888", civ: 90, hg: 0, uhc: 59, badges: [] },
-    { name: "justkqi", head: "justkqii.png", color: "#888888", civ: 51, hg: 0, uhc: 100, badges: [] },
+    { name: "SwingMCC", color: "#888888", civ: 90, hg: 0, uhc: 59, badges: [] },
+    { name: "justkqi", color: "#888888", civ: 51, hg: 0, uhc: 100, badges: [] },
     { name: "RequiemXV2", color: "#888888", civ: 20, hg: 0, uhc: 140, badges: [] },
     { name: "aeryrisu", color: "#888888", civ: 164, hg: 0, uhc: 0, badges: [] }
+];
