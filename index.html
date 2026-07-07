@@ -519,10 +519,12 @@ function rankBadge(rank){
 }
 
 /* ─── HEAD IMAGE ─────────────────────────────────── */
-/* Returns the src path for a player's head.
-   Falls back to icons/heads/default.png if player.head is not set. */
+/* Returns the src path for a player's head, derived automatically
+   from their username: icons/heads/<name>.png
+   If that file doesn't exist, the onerror handlers below fall
+   back to icons/heads/default.png. */
 function headSrc(p){
-  return "icons/heads/" + (p.head || "default.png");
+  return "icons/heads/" + p.name + ".png";
 }
 
 /* Build inline head HTML for table rows */
@@ -532,7 +534,7 @@ function headHTML(p, size){
   const bg = p.color || "#333";
   return `<div class="head-wrap" style="width:${size}px;height:${size}px;border-color:${bg}33">
     <img src="${src}" alt="${p.name}" 
-      onerror="this.classList.add('failed');this.onerror=null">
+      onerror="if(this.src.indexOf('default.png')===-1){this.src='icons/heads/default.png';}else{this.classList.add('failed');this.onerror=null;}">
     <div class="head-fallback" style="background:${bg}">${initials}</div>
   </div>`;
 }
@@ -637,7 +639,14 @@ function openModal(p, pos){
   mImg.alt = p.name;
   mFb.textContent = initials;
   mFb.style.background = p.color || "#333";
-  mImg.onerror = function(){ this.classList.add("failed"); this.onerror=null; };
+  mImg.onerror = function(){
+    if(this.src.indexOf("default.png")===-1){
+      this.src = "icons/heads/default.png";
+    } else {
+      this.classList.add("failed");
+      this.onerror = null;
+    }
+  };
 
   document.getElementById("mName").textContent = p.name;
   document.getElementById("mPos").textContent = `#${pos}`;
