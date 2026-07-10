@@ -170,5 +170,5 @@ const PLAYERS = [
     { name: "Jewdah ig", color: "#888888", civ: 142, hg: 0, uhc: 0, badges: [] },
     { name: "MrFxber", color: "#888888", civ: 146, hg: 0, uhc: 74, badges: [] },
     { name: "aeryrisu", color: "#888888", civ: 164, hg: 0, uhc: 0, badges: [] },
-    { name: "PlinkO34", color: "#888888", civ: 164, hg: 0, uhc: 83, badges: [] }
+    { name: "PlinkO34", color: "#888888", civ: 0, hg: 0, uhc: 83, badges: [] }
 ];
