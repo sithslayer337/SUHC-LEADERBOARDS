@@ -165,7 +165,7 @@ const PLAYERS = [
     { name: "Goldieontop2277", color: "#888888", civ: 125, hg: 41, uhc: 120, badges: [] },
     { name: "s1thslxyer33", color: "#888888", civ: 85, hg: 0, uhc: 0, badges: ["og","host","contributor"] },
     { name: "sithslayer337", color: "#888888", civ: 85, hg: 0, uhc: 119, badges: ["og","host","contributor"] },
-    { name: "SwingMCC", color: "#888888", civ: 60, hg: 41, uhc: 54, badges: [] },
+    { name: "SwingMCC", color: "#888888", civ: 90, hg: 41, uhc: 54, badges: [] },
     { name: "Doomer99218", color: "#888888", civ: 88, hg: 172, uhc: 133, badges: [] },
     { name: "Bigshaq2067", color: "#888888", civ: 59, hg: 36, uhc: 60, badges: [] },
     { name: "Jewdah ig", color: "#888888", civ: 142, hg: 0, uhc: 0, badges: [] },
