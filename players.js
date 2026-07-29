@@ -200,7 +200,7 @@ const PLAYERS = [
     { name: "M4RKYX4", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "Goldieontop2277", color: "#888888", civ: 117, hg: 41, uhc: 120, badges: [] },
     { name: "s1thslxyer33", color: "#888888", civ: 85, hg: 0, uhc: 0, badges: ["og","host","contributor"] },
-    { name: "sithslayer337", color: "#888888", civ: 35, hg: 0, uhc: 119, badges: ["og","host","contributor"] },
+    { name: "sithslayer337", color: "#888888", civ: 28, hg: 0, uhc: 119, badges: ["og","host","contributor"] },
     { name: "SwingMCC", color: "#888888", civ: 80, hg: 34, uhc: 54, badges: [] },
     { name: "Doomer99218", color: "#888888", civ: 155, hg: 122, uhc: 133, badges: [] },
     { name: "Bigshaq2067", color: "#888888", civ: 47, hg: 36, uhc: 60, badges: [] },
@@ -230,7 +230,8 @@ const PLAYERS = [
     { name: "Doomer9921", color: "#888888", civ: 138, hg: 0, uhc: 0, badges: [] },
     { name: "imthebeef3651", color: "#888888", civ: 32, hg: 0, uhc: 0, badges: [] },
     { name: "Alfiezagoat", color: "#888888", civ: 56, hg: 0, uhc: 0, badges: [] },
-    { name: "Tedlikesfooty4", color: "#888888", civ: 46, hg: 0, uhc: 0, badges: [] },
+    { name: "Tedlikesfooty4", color: "#888888", civ: 38, hg: 0, uhc: 0, badges: [] },
     { name: "RJBREAKER777", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
     { name: "Radinontop", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
+    { name: "bosspierre007", color: "#888888", civ: 6, hg: 0, uhc: 0, badges: [] },
 ];
