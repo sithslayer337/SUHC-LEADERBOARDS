@@ -7,3 +7,4 @@ const contributorPlayers = ["s1thslxyer33", "FatherAJT", "Verxza x", "Itzrealvex
 const supporterPlayers = ["s1thslxyer33", "Itzrealvexy", "madchad20081149", "Kaiistooicy", "Xxzert1050", "sithslayer337", "madchad20081149", "KubaIsNoob" "Holymolyqd", "DRAKEODRAKEO10"];
 const civPlayers = ["s1thslxyer33", "sithslayer337", "justkqi", "MrFxber", "TroddenToast412", "aeryrisu", "TecTonic7124", "Bread4Bone", "BOBJR789", "ItsMini Tower", "Doomer99218"];
 const parkourCape = ["sithslayer337"];
+const topCape = ["sithslayer337"];
