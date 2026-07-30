@@ -1,6 +1,6 @@
 const invitedPlayers = ["sithslayer337", "Ytuehba", "JettSilverr", "RainsAK", "Itzrealvexy", "Boogieman881", "Verxza x", "Bread4Bone", "BattierCrown747", "Xxzert1050", "SwingMCC", "s1thslxyer33", "BlitsyMC", "madchad20081149", "Itzrealvexy", "BattierCrown747", "ErringPepper617", "kirsten2205", "Herax9292", "confusemc9870"];
 const boosterPlayers = ["sithslayer337", "Itzrealvexy", "Ytuehba", "PlncheBot", "Kaiistooicy", "ItzCazry", "s1thslxyer33", "Twishsbd", "ItzRealSy4her", "TaxMC6108"];
-const ogPlayers = ["PlinkO34", "sithslayer337", "Itzrealvexy", "Ytuehba", "PlncheBot", "Kaiistooicy", "Verxza x", "BPKOfficial", "OasisGamer03", "s1thslxyer33", "SwingMCC"];
+const ogPlayers = ["PlinkO34", "sithslayer337", "Itzrealvexy", "Ytuehba", "PlncheBot", "Kaiistooicy", "Verxza x", "BPKOfficial", "OasisGamer03", "s1thslxyer33", "SwingMCC", "Alfiezagoat"];
 const menacingPlayers = ["Killtimebtw", "BloodHound16333", "s1thslxyer33", "sithslayer337", "SweetPup5752066"];
 const uhcPlayers = ["Cease Now", "Trentdapro1", "s1thslxyer33", "sithslayer337", "Jackson1232246", "Trentdapro2"];
 const contributorPlayers = ["s1thslxyer33", "FatherAJT", "Verxza x", "Itzrealvexy", "Boogieman881", "sithslayer337", "missedV3", "missedV67", "DRAKEODRAKEO10"];
