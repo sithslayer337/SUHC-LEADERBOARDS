@@ -258,7 +258,7 @@ const PLAYERS = [
     { name: "TaxMC6108", color: "#888888", civ: 13, hg: 12, uhc: 0, badges: [] },
     { name: "windified", color: "#888888", civ: 16, hg: 9, uhc: 0, badges: [] },
     { name: "Squidz9949", color: "#888888", civ: 0, hg: 9, uhc: 0, badges: [] },
-    { name: "FatherAJT", color: "#888888", civ: 0, hg: 394, uhc: 0, badges: [] },
+    { name: "FatherAJT", color: "#888888", civ: 0, hg: 0, uhc: 0, badges: [] },
     { name: "LORD CiLBO", color: "#888888", civ: 11, hg: 0, uhc: 0, badges: [] },
     { name: "GooseyHT1", color: "#888888", civ: 12, hg: 0, uhc: 0, badges: [] },
     { name: "Odellbacon830", color: "#888888", civ: 30, hg: 0, uhc: 0, badges: [] },
